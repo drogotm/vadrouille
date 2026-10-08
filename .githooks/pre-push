@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Hook versionné (activé par `npm install` via le script "prepare").
+# Bloque le push si un secret est détecté, si le typage casse ou si les tests échouent.
+set -e
+npm run --silent verify
