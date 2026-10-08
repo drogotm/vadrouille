@@ -1,8 +1,14 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "types": ["node"]
+    "types": [
+      "node"
+    ]
   },
-  "include": ["./**/*.ts", "../supabase/functions/_shared/**/*.ts"],
+  "include": [
+    "./**/*.ts",
+    "../supabase/functions/_shared/**/*.ts",
+    "../src/lib/demo/**/*.ts"
+  ],
   "exclude": []
 }
