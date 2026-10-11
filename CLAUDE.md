@@ -36,10 +36,18 @@ npm run build:web        # export web statique dans dist/
 ```
 src/
   app/                 # écrans (Expo Router) — un fichier = une route
-  components/          # UI kit maison (boutons, cartes, slider, chips…)
+    index.tsx          #   accueil + mes Vadrouilles
+    nouvelle.tsx       #   création (prénom → nom → week-ends → taille)
+    i/[code].tsx       #   atterrissage du lien d'invitation (app ou web)
+    v/[code]/index.tsx #   écran central : collecte → vote → plan, selon le statut
+    v/[code]/questions.tsx  # questionnaire, une question par écran
+    compte.tsx         #   prénom + sauvegarde par email (code à 6 chiffres)
+  features/            # blocs d'écran : Collecting, Results, OptionCard, Plan
+  components/          # UI kit maison (boutons, cartes, slider, tuiles…)
   lib/
     backend/           # interface Backend + implémentations Supabase et démo
-    ...
+    useVadrouille.ts   # état d'une Vadrouille (react-query, rafraîchi toutes les 4 s)
+    session.tsx        # compte léger (prénom) partagé par toute l'app
   engine/              # ré-export du moteur partagé (voir supabase/functions/_shared)
 supabase/
   config.toml          # config Supabase CLI (auth anonyme, OTP email…)
@@ -58,8 +66,43 @@ est activé dans `tsconfig.json`, Metro résout les extensions explicites.
 
 ## Confidentialité (non négociable)
 
-Voir la section dédiée plus bas : réponses brutes lisibles uniquement par leur auteur (RLS),
-calcul côté serveur, le client ne reçoit que des agrégats filtrés par des seuils.
+- **Réponses brutes** (`responses`) : lisibles uniquement par leur auteur — politique RLS
+  `user_id = auth.uid()`. L'organisateur n'a aucun passe-droit. Prouvé par `tests/db/rls.test.ts`.
+- **Calcul côté serveur** : l'Edge Function `compute-results` lit les réponses avec la clé
+  `service_role` (jamais dans l'app), exécute le moteur et n'enregistre que des agrégats
+  (`results`, `result_options`) + le budget individuel de chacun (`result_member_details`,
+  lisible uniquement par le membre concerné).
+- **Suivi** : les co-membres voient QUI a répondu (`members.responded_at`), jamais QUOI.
+- **Votes** : chacun ne lit que son vote ; seul le décompte par option est exposé (`vote_tally`).
+- **Règle K anti-réidentification** (`engine/explain.ts`, `privacyThreshold = 4`) : sous 4
+  membres présents, aucun agrégat issu des réponses n'est publié (ni « k/n », ni coût/trajet
+  moyens, ni décompte des dispos) — avec 2 ou 3 personnes, un agrégat révèle une réponse
+  individuelle. Chacun ne voit alors que ses propres chiffres et des données destination.
+  Une ligne « k/n voulaient … » n'apparaît que si au moins 2 membres partagent l'envie.
+- **Diagnostic de blocage** : nomme le critère qui bloque et quoi assouplir, jamais la personne.
+- **LLM** : Claude ne reçoit que les données publiques déjà filtrées d'une option, uniquement
+  pour rédiger l'accroche ; il ne voit aucune réponse et ne touche ni au score ni au classement.
+- **Mode démo** : le backend local applique la même séparation public / privé (`getState`).
+
+## Moteur de décision
+
+Code : `supabase/functions/_shared/engine` (`decide.ts`, `evaluate.ts`, `explain.ts`,
+`config.ts`). Déterministe : aucun aléa, aucun LLM, ordre des membres indifférent.
+
+1. **Week-end** : celui qui maximise la présence (dispo = 1, peut-être = 0,5).
+2. **Filtre dur** : une option (destination × confort × week-end) est éliminée si elle viole un
+   critère « indispensable » d'au moins un membre présent.
+3. **Score individuel** : satisfaction pondérée par critère (poids dans `config.ts` ; budget et
+   envies pèsent le plus), × 1,5 si indispensable, × 0,4 si négociable. Budget calculé depuis
+   la ville de chacun (transport A/R + logement + repas + activités).
+4. **Match Score** = 100 × (0,7 × moyenne + 0,3 × satisfaction du moins bien servi). Le terme
+   « minimum » empêche de sacrifier une personne pour gonfler la moyenne ; 0,3 suffit à
+   départager sans laisser un seul membre dicter le résultat.
+5. **Sélection** : 🥇 meilleur score ; 💸 la moins chère au-dessus de max(50, best − 15) ;
+   🔥 la plus « rare » (popularité faible) au-dessus de max(40, best − 30). Trois destinations
+   distinctes.
+6. **Aucune option** : `summary.blocking` dit quel critère bloque et combien de destinations
+   se débloquent si on l'assouplit.
 
 ## Décisions & hypothèses
 
@@ -84,3 +127,27 @@ _(liste tenue à jour au fil du développement — chaque entrée : décision + 
 6. **Export web en `single`** (SPA) : le parcours invité est dynamique (`/i/<code>`), le rendu
    statique n'apporte rien et compliquerait l'accès au stockage de session côté build.
    L'hébergeur doit réécrire toutes les routes vers `index.html` (voir README).
+7. **Fusion du 8 oct. 2026** : deux sessions ont construit le moteur en parallèle ; celui de
+   Luigi a été conservé (commit `c8e9fae`). L'app (écrans, couche Backend) est écrite contre
+   ce moteur-là uniquement.
+8. **Compte léger = connexion anonyme Supabase + prénom.** C'est l'option la plus fluide pour
+   l'invité web : un champ, zéro email, zéro mot de passe. L'email (code à 6 chiffres) est
+   proposé ensuite dans « Mon compte » pour retrouver ses Vadrouilles sur un autre appareil.
+   Tant qu'aucun email n'est rattaché, on ne propose pas de déconnexion (le compte serait perdu).
+9. **Un seul écran central par Vadrouille** (`/v/<code>`) qui suit son statut plutôt que trois
+   routes : un lien partagé reste valable du questionnaire jusqu'au plan du séjour.
+10. **Pas de temps réel** : l'écran central se rafraîchit toutes les 4 s (react-query). Suffisant
+    pour un groupe de 5–10 ; Supabase Realtime est une optimisation post-MVP.
+11. **Qui lance le calcul** : l'organisateur à tout moment (« forcer »), n'importe quel membre
+    quand tout le monde a répondu et que le groupe est au complet (`computePermission`).
+12. **Importance** : trois pastilles discrètes sous la question, « souhaitable » présélectionné.
+    Disponibilités et ville de départ n'ont pas d'importance réglable. Météo : choisir
+    « Grand soleil obligé » la rend indispensable, les autres niveaux non.
+13. **Vote** : anonyme, clos automatiquement quand tous les membres ont voté ; l'organisateur
+    peut clore avant ou rouvrir les réponses. Égalité : meilleur Match Score, puis ordre d'affichage.
+14. **Accroches Claude** : modèle `claude-opus-5-5` par défaut (surchargé par `CLAUDE_MODEL`),
+    effort `low`. Sans clé `ANTHROPIC_API_KEY`, ou en cas d'erreur, l'accroche du seed est utilisée.
+15. **Simulateur iOS** : non testé au 11 oct. 2026 — la machine d'Axelle n'a pas Xcode complet.
+    L'app a été vérifiée de bout en bout sur la version web en format mobile (mode démo).
+16. **Lint** : `expo lint` n'est pas configuré (il installerait ESLint) ; le garde-fou du dépôt
+    est `npm run verify` (typecheck + tests + scan de secrets).
