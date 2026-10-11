@@ -16,6 +16,9 @@ const MESSAGES: Record<string, string> = {
   not_allowed: 'Le calcul se lance quand tout le monde a répondu (ou par l’orga).',
   no_answers: 'Personne n’a encore répondu.',
   invalid_code: 'Code incorrect ou expiré.',
+  answers_locked: 'Les réponses sont figées une fois les résultats calculés.',
+  'row-level security': 'Les réponses sont figées une fois les résultats calculés.',
+  demo_no_email: 'La sauvegarde par email n’existe pas en mode démo.',
   network: 'Connexion impossible. Vérifie ton réseau et réessaie.',
 };
 
