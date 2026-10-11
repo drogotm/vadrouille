@@ -23,5 +23,6 @@ const styles = StyleSheet.create({
     borderWidth: BORDER,
     borderColor: colors.ink,
     borderRadius: radius.lg,
+    gap: space(2),
   },
 });
