@@ -1,11 +1,12 @@
 import { router } from 'expo-router';
-import { Linking, Platform, StyleSheet, View } from 'react-native';
+import { Linking, Platform, Pressable, StyleSheet, View } from 'react-native';
 
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
 import { Pill } from '@/components/Pill';
 import { Body, Caption, Display, Heading, Label, Strong } from '@/components/Typography';
 import {
+  CITIES,
   COMFORT_LABELS,
   formatDuration,
   formatEuros,
@@ -14,6 +15,7 @@ import {
   type Suggestion,
 } from '@/engine';
 import type { VadrouilleState } from '@/lib/backend';
+import { activityUrl, lodgingUrl, placeName, stayDates, transportUrl, type StayDates } from '@/lib/booking';
 import { weekendRange } from '@/lib/dates';
 import { env } from '@/lib/env';
 import { inviteUrl, shareMessage } from '@/lib/links';
@@ -31,7 +33,29 @@ function Line({ label, value, bold }: { label: string; value: string; bold?: boo
   );
 }
 
-function Suggestions({ title, items }: { title: string; items: Suggestion[] }) {
+/** Lien sortant vers un site de réservation (nouvel onglet sur le web). */
+function BookLink({ label, url }: { label: string; url: string }) {
+  return (
+    <Pressable
+      accessibilityRole="link"
+      accessibilityLabel={label}
+      onPress={() => Linking.openURL(url)}
+      style={styles.bookLink}
+    >
+      <Strong color={colors.sunset}>{label} ↗</Strong>
+    </Pressable>
+  );
+}
+
+function Suggestions({
+  title,
+  items,
+  booking,
+}: {
+  title: string;
+  items: Suggestion[];
+  booking?: { place: string; dates: StayDates };
+}) {
   if (items.length === 0) return null;
   return (
     <Card>
@@ -43,6 +67,9 @@ function Suggestions({ title, items }: { title: string; items: Suggestion[] }) {
             {s.price ? <Caption>{s.price}</Caption> : null}
           </View>
           <Caption>{s.description}</Caption>
+          {booking ? (
+            <BookLink label="Réserver sur GetYourGuide" url={activityUrl(s.name, booking.place, booking.dates)} />
+          ) : null}
         </View>
       ))}
       <Caption>Suggestions indicatives, à vérifier avant d’y aller.</Caption>
@@ -59,6 +86,10 @@ export function Plan({ state }: { state: VadrouilleState }) {
   const mine = myDetails[winner.id];
   const data = winner.publicData;
   const votes = tally[winner.id] ?? 0;
+  const place = placeName(dest?.name ?? '');
+  const dates = stayDates(winner.weekendStart, vadrouille.nights);
+  const myCity = CITIES.find((c) => c.id === state.myAnswers?.departureCity)?.name;
+  const myTrip = mine?.transport && myCity ? transportUrl(mine.transport.mode, myCity, place, dates) : null;
 
   return (
     <>
@@ -86,9 +117,14 @@ export function Plan({ state }: { state: VadrouilleState }) {
               }
               value={formatEuros(mine.transport?.cost ?? 0)}
             />
+            {myTrip ? <BookLink label={`Réserver mon trajet sur ${myTrip.site}`} url={myTrip.url} /> : null}
             <Line
               label={`${COMFORT_LABELS[winner.comfort].emoji} Logement ${COMFORT_LABELS[winner.comfort].label.toLowerCase()} · ${data.nights} nuits`}
               value={formatEuros(mine.lodging)}
+            />
+            <BookLink
+              label={`Chercher un logement pour ${state.members.length} sur Booking`}
+              url={lodgingUrl(place, dates, state.members.length)}
             />
             <Line label="🍽️ Repas" value={formatEuros(mine.food)} />
             <Line label="🎟️ Activités" value={formatEuros(mine.activities)} />
@@ -112,7 +148,7 @@ export function Plan({ state }: { state: VadrouilleState }) {
         </Card>
       )}
 
-      <Suggestions title="🎯 À faire sur place" items={data.suggestions.activities} />
+      <Suggestions title="🎯 À faire sur place" items={data.suggestions.activities} booking={{ place, dates }} />
       <Suggestions title="🍷 Où manger" items={data.suggestions.restaurants} />
 
       <Button
@@ -152,4 +188,5 @@ const styles = StyleSheet.create({
   line: { flexDirection: 'row', alignItems: 'baseline', justifyContent: 'space-between', gap: space(3) },
   separator: { height: 2, backgroundColor: colors.ink, marginVertical: space(1) },
   suggestion: { gap: 2, marginTop: space(3) },
+  bookLink: { alignSelf: 'flex-start', paddingVertical: space(1) },
 });

@@ -151,3 +151,9 @@ _(liste tenue à jour au fil du développement — chaque entrée : décision + 
     L'app a été vérifiée de bout en bout sur la version web en format mobile (mode démo).
 16. **Lint** : `expo lint` n'est pas configuré (il installerait ESLint) ; le garde-fou du dépôt
     est `npm run verify` (typecheck + tests + scan de secrets).
+17. **Liens de réservation** (15 oct. 2026, `src/lib/booking.ts`) : le plan du séjour propose des
+    liens de RECHERCHE pré-remplis plutôt que des adresses d'offres précises, qui mourraient vite
+    et seraient impossibles à vérifier pour 40 destinations. Logement → Booking (dates + toute la
+    bande, 2 par chambre) ; activités → GetYourGuide ; trajet → selon le mode retenu pour MOI
+    (train → Trainline, bus → BlaBlaCar, avion → Google Vols, voiture → Google Maps). Aucune
+    affiliation, aucune clé d'API, rien n'est réservé par l'app.

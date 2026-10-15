@@ -19,6 +19,11 @@ function addDays(iso: string, days: number): Date {
   return d;
 }
 
+/** Date ISO décalée de `days` jours (ex. : dimanche de retour = vendredi + 2). */
+export function shiftIso(iso: string, days: number): string {
+  return toIso(addDays(iso, days));
+}
+
 /** Les `count` prochains vendredis à partir de demain. */
 export function upcomingWeekends(count = 12, from = new Date()): string[] {
   const d = new Date(from.getFullYear(), from.getMonth(), from.getDate() + 1, 12);
