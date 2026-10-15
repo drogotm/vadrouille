@@ -18,6 +18,10 @@ export const CITY_LABELS: Record<CityId, string> = {
   nantes: 'Nantes',
   toulouse: 'Toulouse',
   strasbourg: 'Strasbourg',
+  montpellier: 'Montpellier',
+  nice: 'Nice',
+  rennes: 'Rennes',
+  grenoble: 'Grenoble',
 };
 
 export const TRANSPORT_LABELS: Record<TransportMode, { label: string; emoji: string }> = {

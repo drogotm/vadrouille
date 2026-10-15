@@ -17,7 +17,11 @@ export type CityId =
   | 'lille'
   | 'nantes'
   | 'toulouse'
-  | 'strasbourg';
+  | 'strasbourg'
+  | 'montpellier'
+  | 'nice'
+  | 'rennes'
+  | 'grenoble';
 
 export type TransportMode = 'train' | 'car' | 'plane' | 'bus';
 export type Cadre = 'mer' | 'montagne' | 'campagne' | 'ville';

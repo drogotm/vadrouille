@@ -14,6 +14,7 @@ import type {
 
 export const CITY_IDS: readonly CityId[] = [
   'paris', 'lyon', 'marseille', 'bordeaux', 'lille', 'nantes', 'toulouse', 'strasbourg',
+  'montpellier', 'nice', 'rennes', 'grenoble',
 ];
 export const TRANSPORT_MODES: readonly TransportMode[] = ['train', 'car', 'bus', 'plane'];
 export const CADRES: readonly Cadre[] = ['mer', 'montagne', 'campagne', 'ville'];

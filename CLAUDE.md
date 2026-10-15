@@ -151,3 +151,10 @@ _(liste tenue à jour au fil du développement — chaque entrée : décision + 
     L'app a été vérifiée de bout en bout sur la version web en format mobile (mode démo).
 16. **Lint** : `expo lint` n'est pas configuré (il installerait ESLint) ; le garde-fou du dépôt
     est `npm run verify` (typecheck + tests + scan de secrets).
+19. **Villes de départ : 12** (15 oct. 2026, demande d'Axelle) : + Montpellier, Nice, Rennes,
+    Grenoble. Montpellier et Nice étaient déjà des destinations : `homeCity` les relie à leur
+    ville. Leurs trajets ont été AJOUTÉS à `routes.ts` par `generate-routes.ts --ajouter=…`
+    (nouvelle option) sans régénérer les 8 villes existantes. Temps de train connus ajoutés
+    pour ces villes. Limite connue, héritée de l'heuristique : les trajets en voiture vers la
+    montagne sont sous-estimés (ex. Lyon → Chamonix 2 h 10), pour les anciennes comme les
+    nouvelles villes — à corriger à la main dans `routes.ts` si besoin.

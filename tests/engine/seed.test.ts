@@ -20,7 +20,7 @@ describe('données seed', () => {
 
   it('les 8 villes de départ du brief', () => {
     expect(CITIES.map((c) => c.id).sort()).toEqual([...CITY_IDS].sort());
-    expect(CITIES).toHaveLength(8);
+    expect(CITIES).toHaveLength(12);
   });
 
   it('chaque destination est complète et ses tags sont valides', () => {

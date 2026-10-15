@@ -35,6 +35,19 @@ function answers(overrides: Partial<Answers> = {}): Answers {
 const personas = (): EngineMember[] =>
   PERSONAS.slice(0, 5).map((p, i) => ({ id: `m${i}-${p.firstName}`, answers: p.answers(W) }));
 
+describe('decide — villes de départ ajoutées le 15 oct. 2026', () => {
+  it('un groupe venu de Montpellier, Nice, Rennes et Grenoble obtient 3 options', () => {
+    const cities = ['montpellier', 'nice', 'rennes', 'grenoble'] as const;
+    const members: EngineMember[] = cities.map((c) => ({
+      id: c,
+      answers: answers({ departureCity: c, maxTravelHours: 6, budgetMax: 450 }),
+    }));
+    const result = decide({ weekends: W, members, totalMembers: members.length });
+    expect(result.status).toBe('ok');
+    expect(result.options).toHaveLength(3);
+  });
+});
+
 describe('decide — cas nominal', () => {
   const result = decide({ weekends: W, members: personas(), totalMembers: 5 });
 
