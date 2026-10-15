@@ -25,40 +25,40 @@ colors:
   succes: "#17975F"
 typography:
   display:
-    fontFamily: "Bricolage Grotesque"
+    fontFamily: "Fraunces"
     fontSize: "40px"
     fontWeight: 800
-    lineHeight: 1.05
-    letterSpacing: "-1px"
+    lineHeight: 1.1
+    letterSpacing: "-0.8px"
   headline:
-    fontFamily: "Bricolage Grotesque"
+    fontFamily: "Fraunces"
     fontSize: "30px"
     fontWeight: 800
-    lineHeight: 1.1
-    letterSpacing: "-0.6px"
+    lineHeight: 1.17
+    letterSpacing: "-0.4px"
   title:
-    fontFamily: "Bricolage Grotesque"
+    fontFamily: "Fraunces"
     fontSize: "21px"
     fontWeight: 700
-    lineHeight: 1.19
-    letterSpacing: "-0.3px"
+    lineHeight: 1.24
+    letterSpacing: "-0.2px"
   body:
-    fontFamily: "DM Sans"
+    fontFamily: "Instrument Sans"
     fontSize: "16px"
     fontWeight: 400
     lineHeight: 1.44
   body-strong:
-    fontFamily: "DM Sans"
+    fontFamily: "Instrument Sans"
     fontSize: "16px"
     fontWeight: 700
     lineHeight: 1.44
   caption:
-    fontFamily: "DM Sans"
+    fontFamily: "Instrument Sans"
     fontSize: "13px"
     fontWeight: 500
     lineHeight: 1.38
   label:
-    fontFamily: "DM Sans"
+    fontFamily: "Instrument Sans"
     fontSize: "12px"
     fontWeight: 700
     lineHeight: 1.33
@@ -147,7 +147,8 @@ hauteur de son ombre. C'est ce geste, physique et immédiat, qui rend l'app **lu
 L'ambiance est **chaleureuse** : aucun gris froid, aucun bleu d'entreprise. Même le texte
 secondaire est une encre violacée, pas un gris neutre. La densité est faible : une question par
 écran, de gros boutons, beaucoup d'air, pour un usage à une main sur téléphone, en moins de
-2 minutes. La typo grotesque expressive (Bricolage Grotesque) porte les titres ; DM Sans, sobre
+2 minutes. La typo est « rétro voyage » : Fraunces, un serif doux aux formes rondes comme sur les
+vieilles cartes postales et affiches de destination, porte les titres ; Instrument Sans, nette
 et très lisible, porte tout le reste.
 
 **Key Characteristics:**
@@ -197,24 +198,25 @@ violacée, jamais en gris neutre.
 
 ## Typography
 
-**Display Font:** Bricolage Grotesque (800 ExtraBold, 700 Bold, 600 SemiBold)
-**Body Font:** DM Sans (400, 500, 700)
+**Display Font:** Fraunces (800 ExtraBold, 700 Bold, 600 SemiBold)
+**Body Font:** Instrument Sans (400, 500, 700)
 
-**Character:** une grotesque à forte personnalité, serrée et chaleureuse, pour les titres et
-les gros chiffres ; une sans-serif géométrique calme pour lire sans effort.
+**Character:** « rétro voyage ». Un serif doux et rond, chaleureux et un peu chic, pour les
+titres, les libellés de choix et les gros chiffres ; une sans-serif nette et moderne pour lire
+sans effort. Choix d'Axelle (15 oct. 2026), en remplacement de Bricolage Grotesque + DM Sans.
 
 ### Hierarchy
-- **Display** (800, 40 px, 42 px) : le grand titre d'un écran clé (« On part à Annecy ! »).
+- **Display** (800, 40 px, 44 px) : le grand titre d'un écran clé (« On part à Annecy ! »).
   Les gros chiffres (budget, taille du groupe) montent jusqu'à 64–88 px.
-- **Headline** (800, 30 px, 33 px) : la question du questionnaire, le titre de chaque étape.
-- **Title** (700, 21 px, 25 px) : titres de cartes, nom des mois du calendrier (20 px).
+- **Headline** (800, 30 px, 35 px) : la question du questionnaire, le titre de chaque étape.
+- **Title** (700, 21 px, 26 px) : titres de cartes, nom des mois du calendrier (20 px).
 - **Body** (400, 16 px, 23 px) : explications et consignes.
 - **Caption** (500, 13 px, 18 px) : légendes, mentions « estimation », rappels de confidentialité.
 - **Label** (700, 12 px, espacement 1,2 px, majuscules) : surtitres de contexte (« Tu organises »).
 
 ### Named Rules
 **La règle du chiffre roi.** Un montant ou une quantité que l'utilisateur règle (budget, durée,
-taille du groupe) s'affiche en Bricolage Grotesque très grand, centré, au-dessus de son curseur.
+taille du groupe) s'affiche en Fraunces très grand, centré, au-dessus de son curseur.
 
 ## Layout
 
@@ -258,7 +260,7 @@ dessin au feutre.
 
 ### Buttons
 - **Shape :** pilule (999 px), contour encre 2,5 px, ombre tampon.
-- **Primary :** coucher de soleil, texte papier en Bricolage Grotesque 700 18 px, 60 px de haut.
+- **Primary :** coucher de soleil, texte papier en Fraunces 700 18 px, 60 px de haut.
 - **Secondary :** papier, texte encre. **Dark :** encre, texte sable. **Ghost :** transparent,
   sans contour ni ombre, pour les actions discrètes (« Modifier »).
 - **Appui :** enfoncement de la longueur de l'ombre. **Désactivé :** opacité 45 %.
@@ -266,7 +268,7 @@ dessin au feutre.
 
 ### Chips
 - **Pilules d'info :** fond coloré selon le rôle (soleil pâle pour une date, menthe pour « dans
-  ton budget »), contour encre 2 px, DM Sans 700 13 px.
+  ton budget »), contour encre 2 px, Instrument Sans 700 13 px.
 - **Importance :** trois puces « Négociable / Souhaitable / Indispensable » sous une question ;
   la choisie prend un contour encre (fond encre et texte papier pour « Indispensable »).
 
@@ -278,18 +280,18 @@ dessin au feutre.
 - **Border :** encre 2,5 px. **Internal Padding :** 20 px.
 
 ### Inputs / Fields
-- **Style :** papier, contour encre 2,5 px, coins de 16 px, ombre tampon de 3 px, DM Sans 500
-  18 px (Bricolage 700 26 px pour la grande saisie du nom).
+- **Style :** papier, contour encre 2,5 px, coins de 16 px, ombre tampon de 3 px, Instrument Sans 500
+  18 px (Fraunces 700 26 px pour la grande saisie du nom).
 - **Error :** contour danger (#E5484D) et message sous le champ.
 
 ### Navigation
 - **Barre du haut :** bouton retour rond de 44 px (papier, contour encre), titre centré en
-  Bricolage 700 17 px (ex. « 3 / 9 » dans le questionnaire). Pas de barre d'onglets : le
+  Fraunces 700 17 px (ex. « 3 / 9 » dans le questionnaire). Pas de barre d'onglets : le
   parcours est linéaire.
 
 ### Tuiles de choix (signature)
 Le cœur du questionnaire. Grande tuile papier (coins 22 px, contour encre) avec émoji, libellé
-en Bricolage 700 et pastille de coche ronde en haut à droite. Choisie, elle prend la couleur de
+en Fraunces 700 et pastille de coche ronde en haut à droite. Choisie, elle prend la couleur de
 sa question (soleil, menthe, flamant, ciel, lavande) et une ombre plus forte. Compacte en grille
 de 2 colonnes (112 px de haut minimum), large en liste pour les choix avec description.
 
@@ -308,7 +310,7 @@ Inactive, elle passe au contour filet sans ombre. Une légende à pastilles expl
 - **Do** donner à chaque couleur d'été un seul rôle, le même du début à la fin du parcours.
 - **Do** garder une question par écran, le bouton principal en bas, et des zones tactiles d'au
   moins 44 px.
-- **Do** afficher les montants et durées réglables en Bricolage Grotesque très grand.
+- **Do** afficher les montants et durées réglables en Fraunces très grand.
 - **Do** signaler chaque prix ou durée comme une estimation, en légende.
 
 ### Don't:

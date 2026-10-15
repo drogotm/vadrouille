@@ -199,3 +199,11 @@ _(liste tenue à jour au fil du développement — chaque entrée : décision + 
     séjour garde un bouton « Revoir » qui déplie les 3 options calculées (avec la ligne perso,
     le nombre de votes et la gagnante en avant). Pendant le vote, elles restaient déjà visibles.
     Design documenté dans `DESIGN.md` (+ `.impeccable/design.json`), généré par Impeccable.
+23. **Vote modifiable, météo en 3 choix, typo « rétro voyage »** (15 oct. 2026, Axelle) :
+    - **Remplace la clôture automatique de la décision 13** : le vote reste ouvert jusqu'à ce que
+      l'orga le close (`close_vote`), pour que chacun puisse changer d'avis. Migration
+      `20261015120000_vote_ouvert_jusqu_a_cloture.sql` ; l'orga voit « Tout le monde a voté ».
+    - Météo : Peu importe / Ce serait cool / Important ; « Grand soleil obligé » (qui rendait la
+      météo éliminatoire) est retiré. Le moteur accepte toujours le niveau 3 (anciennes réponses).
+    - Polices : Fraunces (titres) + Instrument Sans (texte), via `@expo-google-fonts/fraunces` et
+      `@expo-google-fonts/instrument-sans` ; Bricolage Grotesque et DM Sans retirées.

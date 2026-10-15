@@ -38,7 +38,7 @@
       "refersTo": "button-primary",
       "description": "L'action principale de l'écran, fixée en bas.",
       "html": "<button class=\"ds-btn-primary\">Suivant</button>",
-      "css": ".ds-btn-primary { background: #FF5B3A; color: #FFFFFF; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 18px; letter-spacing: -0.2px; min-height: 60px; padding: 0 24px; border: 2.5px solid #231A3A; border-radius: 999px; box-shadow: 5px 5px 0 #231A3A; cursor: pointer; transition: transform 0.08s, box-shadow 0.08s; } .ds-btn-primary:hover { background: #FF6C4E; } .ds-btn-primary:focus-visible { outline: 3px solid #FFC83D; outline-offset: 3px; } .ds-btn-primary:active { transform: translate(5px, 5px); box-shadow: none; }"
+      "css": ".ds-btn-primary { background: #FF5B3A; color: #FFFFFF; font-family: 'Fraunces', serif; font-weight: 700; font-size: 18px; letter-spacing: -0.2px; min-height: 60px; padding: 0 24px; border: 2.5px solid #231A3A; border-radius: 999px; box-shadow: 5px 5px 0 #231A3A; cursor: pointer; transition: transform 0.08s, box-shadow 0.08s; } .ds-btn-primary:hover { background: #FF6C4E; } .ds-btn-primary:focus-visible { outline: 3px solid #FFC83D; outline-offset: 3px; } .ds-btn-primary:active { transform: translate(5px, 5px); box-shadow: none; }"
     },
     {
       "name": "Bouton secondaire",
@@ -46,7 +46,7 @@
       "refersTo": "button-secondary",
       "description": "Action complémentaire (annoncer, partager).",
       "html": "<button class=\"ds-btn-secondary\">Annoncer au groupe</button>",
-      "css": ".ds-btn-secondary { background: #FFFFFF; color: #231A3A; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 18px; min-height: 50px; padding: 0 20px; border: 2.5px solid #231A3A; border-radius: 999px; box-shadow: 4px 4px 0 #231A3A; cursor: pointer; transition: transform 0.08s, box-shadow 0.08s; } .ds-btn-secondary:hover { background: #FFF4E6; } .ds-btn-secondary:focus-visible { outline: 3px solid #FFC83D; outline-offset: 3px; } .ds-btn-secondary:active { transform: translate(4px, 4px); box-shadow: none; }"
+      "css": ".ds-btn-secondary { background: #FFFFFF; color: #231A3A; font-family: 'Fraunces', serif; font-weight: 700; font-size: 18px; min-height: 50px; padding: 0 20px; border: 2.5px solid #231A3A; border-radius: 999px; box-shadow: 4px 4px 0 #231A3A; cursor: pointer; transition: transform 0.08s, box-shadow 0.08s; } .ds-btn-secondary:hover { background: #FFF4E6; } .ds-btn-secondary:focus-visible { outline: 3px solid #FFC83D; outline-offset: 3px; } .ds-btn-secondary:active { transform: translate(4px, 4px); box-shadow: none; }"
     },
     {
       "name": "Champ",
@@ -54,7 +54,7 @@
       "refersTo": "field",
       "description": "Saisie du prénom, du nom de la Vadrouille, de la ville.",
       "html": "<input class=\"ds-field\" placeholder=\"Ex. : Rennes, Angers…\" />",
-      "css": ".ds-field { background: #FFFFFF; color: #231A3A; font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 18px; min-height: 56px; padding: 12px 16px; border: 2.5px solid #231A3A; border-radius: 16px; box-shadow: 3px 3px 0 #231A3A; } .ds-field::placeholder { color: #8C84A0; } .ds-field:focus-visible { outline: 3px solid #FFC83D; outline-offset: 2px; }"
+      "css": ".ds-field { background: #FFFFFF; color: #231A3A; font-family: 'Instrument Sans', sans-serif; font-weight: 500; font-size: 18px; min-height: 56px; padding: 12px 16px; border: 2.5px solid #231A3A; border-radius: 16px; box-shadow: 3px 3px 0 #231A3A; } .ds-field::placeholder { color: #8C84A0; } .ds-field:focus-visible { outline: 3px solid #FFC83D; outline-offset: 2px; }"
     },
     {
       "name": "Pilule d'info",
@@ -62,7 +62,7 @@
       "refersTo": "pill",
       "description": "Date, nombre de votes, statut de budget.",
       "html": "<span class=\"ds-pill\">📅 13 – 15 nov.</span>",
-      "css": ".ds-pill { display: inline-flex; gap: 4px; align-items: center; background: #FFEDB8; color: #231A3A; font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 13px; padding: 4px 12px; border: 2px solid #231A3A; border-radius: 999px; }"
+      "css": ".ds-pill { display: inline-flex; gap: 4px; align-items: center; background: #FFEDB8; color: #231A3A; font-family: 'Instrument Sans', sans-serif; font-weight: 700; font-size: 13px; padding: 4px 12px; border: 2px solid #231A3A; border-radius: 999px; }"
     },
     {
       "name": "Carte",
@@ -70,7 +70,7 @@
       "refersTo": "card",
       "description": "Bloc d'information ou d'action.",
       "html": "<div class=\"ds-card\"><strong>Ton budget prévisionnel</strong><p>Visible par toi uniquement.</p></div>",
-      "css": ".ds-card { background: #FFFFFF; color: #231A3A; font-family: 'DM Sans', sans-serif; padding: 20px; border: 2.5px solid #231A3A; border-radius: 22px; box-shadow: 4px 4px 0 #231A3A; } .ds-card strong { font-family: 'Bricolage Grotesque', sans-serif; font-size: 21px; } .ds-card p { color: #544A6B; font-size: 13px; margin: 6px 0 0; }"
+      "css": ".ds-card { background: #FFFFFF; color: #231A3A; font-family: 'Instrument Sans', sans-serif; padding: 20px; border: 2.5px solid #231A3A; border-radius: 22px; box-shadow: 4px 4px 0 #231A3A; } .ds-card strong { font-family: 'Fraunces', serif; font-size: 21px; } .ds-card p { color: #544A6B; font-size: 13px; margin: 6px 0 0; }"
     },
     {
       "name": "Tuile de choix",
@@ -78,7 +78,7 @@
       "refersTo": "tile",
       "description": "Choix du questionnaire ; prend la couleur de sa question une fois choisie.",
       "html": "<button class=\"ds-tile\" aria-pressed=\"true\"><span class=\"ds-tile-emoji\">🏔️</span><span class=\"ds-tile-label\">Montagne</span></button>",
-      "css": ".ds-tile { position: relative; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; width: 160px; min-height: 112px; padding: 16px; background: #FFFFFF; color: #231A3A; border: 2.5px solid #231A3A; border-radius: 22px; box-shadow: 2px 2px 0 #231A3A; cursor: pointer; transition: transform 0.08s; } .ds-tile[aria-pressed=\"true\"] { background: #7BE0B4; box-shadow: 4px 4px 0 #231A3A; } .ds-tile:focus-visible { outline: 3px solid #FFC83D; outline-offset: 3px; } .ds-tile:active { transform: translate(2px, 2px); box-shadow: none; } .ds-tile-emoji { font-size: 34px; } .ds-tile-label { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 17px; }"
+      "css": ".ds-tile { position: relative; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; width: 160px; min-height: 112px; padding: 16px; background: #FFFFFF; color: #231A3A; border: 2.5px solid #231A3A; border-radius: 22px; box-shadow: 2px 2px 0 #231A3A; cursor: pointer; transition: transform 0.08s; } .ds-tile[aria-pressed=\"true\"] { background: #7BE0B4; box-shadow: 4px 4px 0 #231A3A; } .ds-tile:focus-visible { outline: 3px solid #FFC83D; outline-offset: 3px; } .ds-tile:active { transform: translate(2px, 2px); box-shadow: none; } .ds-tile-emoji { font-size: 34px; } .ds-tile-label { font-family: 'Fraunces', serif; font-weight: 700; font-size: 17px; }"
     },
     {
       "name": "Barre de week-end",
@@ -86,7 +86,7 @@
       "refersTo": "weekend-bar",
       "description": "Week-end proposé dans le calendrier : vendredi → dimanche, un seul toucher.",
       "html": "<button class=\"ds-weekend\" data-state=\"dispo\"><span>13</span><span>14</span><span>15</span></button>",
-      "css": ".ds-weekend { display: flex; width: 150px; height: 40px; align-items: center; background: #FFFFFF; border: 2.5px solid #231A3A; border-radius: 999px; box-shadow: 2px 2px 0 #231A3A; cursor: pointer; } .ds-weekend span { flex: 1; text-align: center; font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 16px; color: #231A3A; } .ds-weekend[data-state=\"dispo\"] { background: #7BE0B4; box-shadow: 3px 3px 0 #231A3A; } .ds-weekend[data-state=\"peut-etre\"] { background: #FFC83D; box-shadow: 3px 3px 0 #231A3A; } .ds-weekend:focus-visible { outline: 3px solid #FFC83D; outline-offset: 3px; } .ds-weekend:active { transform: translate(1px, 1px); }"
+      "css": ".ds-weekend { display: flex; width: 150px; height: 40px; align-items: center; background: #FFFFFF; border: 2.5px solid #231A3A; border-radius: 999px; box-shadow: 2px 2px 0 #231A3A; cursor: pointer; } .ds-weekend span { flex: 1; text-align: center; font-family: 'Instrument Sans', sans-serif; font-weight: 700; font-size: 16px; color: #231A3A; } .ds-weekend[data-state=\"dispo\"] { background: #7BE0B4; box-shadow: 3px 3px 0 #231A3A; } .ds-weekend[data-state=\"peut-etre\"] { background: #FFC83D; box-shadow: 3px 3px 0 #231A3A; } .ds-weekend:focus-visible { outline: 3px solid #FFC83D; outline-offset: 3px; } .ds-weekend:active { transform: translate(1px, 1px); }"
     }
   ],
   "narrative": {
@@ -102,7 +102,7 @@
     "rules": [
       { "name": "La règle une couleur, un sens", "body": "Chaque couleur d'été a un rôle fixe dans tout le parcours (soleil = choisi, menthe = dispo / OK, flamant = envies et Wild Card). Ne jamais en prendre une pour décorer.", "section": "colors" },
       { "name": "La règle pas de gris", "body": "Les textes secondaires et inactifs restent dans la famille de l'encre violacée, jamais en gris neutre.", "section": "colors" },
-      { "name": "La règle du chiffre roi", "body": "Un montant ou une quantité réglable s'affiche en Bricolage Grotesque très grand, centré, au-dessus de son curseur.", "section": "typography" },
+      { "name": "La règle du chiffre roi", "body": "Un montant ou une quantité réglable s'affiche en Fraunces très grand, centré, au-dessus de son curseur.", "section": "typography" },
       { "name": "La règle de l'enfoncement", "body": "À l'appui, l'élément glisse exactement de la longueur de son ombre et l'ombre disparaît. Jamais d'ombre floue ou colorée.", "section": "elevation" },
       { "name": "La règle plus d'ombre = choisi", "body": "Un élément sélectionné a une ombre plus marquée que ses voisins non sélectionnés.", "section": "elevation" }
     ],
@@ -110,7 +110,7 @@
       "Do dessiner chaque élément touchable avec le contour encre (2,5 px) et une ombre tampon décalée sans flou.",
       "Do donner à chaque couleur d'été un seul rôle, le même du début à la fin du parcours.",
       "Do garder une question par écran, le bouton principal en bas, et des zones tactiles d'au moins 44 px.",
-      "Do afficher les montants et durées réglables en Bricolage Grotesque très grand.",
+      "Do afficher les montants et durées réglables en Fraunces très grand.",
       "Do signaler chaque prix ou durée comme une estimation, en légende."
     ],
     "donts": [

@@ -13,7 +13,7 @@ import { isDemo } from '@/lib/env';
 import { errorMessage } from '@/lib/errors';
 import { haptic } from '@/lib/haptics';
 import { copyToClipboard, inviteMessage, inviteUrl, nudgeMessage, shareMessage } from '@/lib/links';
-import { colors, space } from '@/theme/tokens';
+import { colors, fonts, space } from '@/theme/tokens';
 
 /** Phase de collecte : inviter, suivre QUI a répondu (jamais quoi), relancer, lancer le calcul. */
 export function Collecting({ state, refresh }: { state: VadrouilleState; refresh: () => Promise<unknown> }) {
@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
   rowBetween: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: space(2) },
   members: { gap: space(3), marginVertical: space(3) },
   member: { flexDirection: 'row', alignItems: 'center', gap: space(3) },
-  status: { fontFamily: 'DMSans_500Medium', fontSize: 13, color: colors.inkSoft },
+  status: { fontFamily: fonts.bodyMedium, fontSize: 13, color: colors.inkSoft },
   actions: { flexDirection: 'row', gap: space(3), marginTop: space(2) },
   blocking: { gap: 2, marginTop: space(2) },
 });

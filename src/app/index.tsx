@@ -10,7 +10,7 @@ import { Body, Caption, Display, Heading, Label, Strong } from '@/components/Typ
 import { backend, type Vadrouille } from '@/lib/backend';
 import { weekendRange } from '@/lib/dates';
 import { useSession } from '@/lib/session';
-import { colors, hardShadow, space } from '@/theme/tokens';
+import { colors, fonts, hardShadow, space } from '@/theme/tokens';
 
 const STATUS: Record<Vadrouille['status'], { label: string; emoji: string; color: string }> = {
   collecting: { label: 'Réponses en cours', emoji: '✍️', color: colors.sunSoft },
@@ -130,5 +130,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  numberText: { fontFamily: 'BricolageGrotesque_800ExtraBold', fontSize: 18, color: colors.ink },
+  numberText: { fontFamily: fonts.display, fontSize: 18, color: colors.ink },
 });
