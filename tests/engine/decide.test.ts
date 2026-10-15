@@ -43,6 +43,11 @@ describe('decide — groupe de 15 (taille maximale)', () => {
     ];
     expect(members).toHaveLength(15);
     const result = decide({ weekends: W, members, totalMembers: 15 });
+    expect(result.status).toBe('ok');
+    expect(result.options).toHaveLength(3);
+  });
+});
+
 describe('decide — villes de départ ajoutées le 15 oct. 2026', () => {
   it('un groupe venu de Montpellier, Nice, Rennes et Grenoble obtient 3 options', () => {
     const cities = ['montpellier', 'nice', 'rennes', 'grenoble'] as const;
