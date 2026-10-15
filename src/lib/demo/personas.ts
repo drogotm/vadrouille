@@ -60,7 +60,7 @@ export const PERSONAS: readonly Persona[] = [
       cadres: ['mer'],
       envies: ['bien_etre', 'gastronomie'],
       comfort: 2,
-      weather: 3,
+      weather: 2,
       ambiance: 0.3,
       importance: { comfort: 'negociable' },
     }),

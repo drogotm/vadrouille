@@ -62,7 +62,6 @@ export const WEATHER_LABELS: { label: string; emoji: string }[] = [
   { label: 'Peu importe', emoji: '🌦️' },
   { label: 'Ce serait cool', emoji: '🌤️' },
   { label: 'Important', emoji: '☀️' },
-  { label: 'Grand soleil obligé', emoji: '😎' },
 ];
 
 export const CRITERION_LABELS: Record<CriterionKey, string> = {

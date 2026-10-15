@@ -261,7 +261,7 @@ export function createDemoBackend(): Backend {
         )[0];
         if (favourite) v.votes[m.userId] = favourite.id;
       }
-      if (Object.keys(v.votes).length >= v.members.length) finalize(v);
+      // le vote reste ouvert jusqu'à ce que l'orga le close : on peut changer d'avis
       await save();
     },
 

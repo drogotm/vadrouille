@@ -457,12 +457,9 @@ const STEPS: StepDef[] = [
             emoji={w.emoji}
             selected={d.weather === level}
             onPress={() => {
-              // « grand soleil obligé » = critère indispensable ; les autres niveaux le relâchent
+              // 3 niveaux, aucun n'est éliminatoire (l'ancien « grand soleil obligé » l'était)
               const { weather: _w, ...rest } = d.importance;
-              set({
-                weather: level as WeatherImportance,
-                importance: level === 3 ? { ...rest, weather: 'indispensable' } : rest,
-              });
+              set({ weather: level as WeatherImportance, importance: rest });
             }}
             color={colors.sun}
           />

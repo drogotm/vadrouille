@@ -147,7 +147,7 @@ describe('parcours complet — 5 amis', () => {
     }
   });
 
-  it('7. le groupe vote ; le vote se clôt quand tout le monde a voté', async () => {
+  it('7. le groupe vote, peut changer d’avis, et l’orga clôt le vote', async () => {
     const options = await db.as(ids['Léa']).query<{ id: string; kind: string }>(
       `select id, kind from public.result_options where vadrouille_id = $1 order by position`,
       [vadrouilleId],
@@ -166,6 +166,15 @@ describe('parcours complet — 5 amis', () => {
     expect(v.status).toBe('voting');
 
     await db.as(ids['Jade']).query(`select public.cast_vote($1)`, [votes['Jade']]);
+    // tout le monde a voté : le vote reste ouvert, et on peut encore changer d'avis
+    v = await db.as(ids['Jade']).one<{ status: string }>(`select status from public.vadrouilles where id = $1`, [vadrouilleId]);
+    expect(v.status).toBe('voting');
+    await db.as(ids['Max']).query(`select public.cast_vote($1)`, [best.id]);
+    const after = await db.as(ids['Jade']).query<{ votes: number }>(`select * from public.vote_tally($1)`, [vadrouilleId]);
+    expect(after.map((t) => t.votes)).toEqual([4, 1, 0]);
+
+    // seule l'orga clôt le vote
+    await db.as(ids['Léa']).query(`select public.close_vote($1)`, [vadrouilleId]);
     const decided = await db.as(ids['Jade']).one<{ status: string; decided_option_id: string }>(
       `select status, decided_option_id from public.vadrouilles where id = $1`,
       [vadrouilleId],

@@ -67,7 +67,7 @@ export function Results({ state, refresh }: { state: VadrouilleState; refresh: (
               </View>
             ) : null}
             <Button
-              title={voted ? `Tu as voté ${name} ✓` : `Je vote ${name}`}
+              title={voted ? `Tu as voté ${name} ✓` : myVote ? `Changer pour ${name}` : `Je vote ${name}`}
               variant={voted ? 'dark' : 'primary'}
               size="md"
               loading={busy === option.id}
@@ -83,8 +83,12 @@ export function Results({ state, refresh }: { state: VadrouilleState; refresh: (
           🗳️ {totalVotes}/{members.length} ont voté
         </Strong>
         <Caption>
-          Le vote se clôt tout seul quand tout le monde a voté. Les votes sont anonymes : seul le décompte est visible.
+          Tu peux changer ton vote jusqu’à ce que l’orga clôture. Les votes sont anonymes : seul le décompte est
+          visible.
         </Caption>
+        {isOrganizer && totalVotes >= members.length ? (
+          <Strong color={colors.lagoon}>Tout le monde a voté : tu peux clore le vote.</Strong>
+        ) : null}
         {isOrganizer ? (
           <View style={{ gap: space(2), marginTop: space(2) }}>
             <Button
