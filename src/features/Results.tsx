@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { useState } from 'react';
 import { View } from 'react-native';
 
@@ -73,6 +74,13 @@ export function Results({ state, refresh }: { state: VadrouilleState; refresh: (
               loading={busy === option.id}
               onPress={() => run(option.id, () => backend.vote(option.id))}
               testID={`vote-${option.kind}`}
+            />
+            <Button
+              title="Voir le détail, les prix et les liens"
+              variant="secondary"
+              size="md"
+              onPress={() => router.push(`/v/${vadrouille.inviteCode}/option/${option.id}` as never)}
+              testID={`detail-${option.kind}`}
             />
           </OptionCard>
         );

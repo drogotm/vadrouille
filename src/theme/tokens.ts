@@ -1,7 +1,7 @@
 /**
  * Identité Vadrouille : « carte postale ensoleillée », néo-brutalisme doux.
- * Contours encre épais + ombres franches décalées, couleurs chaudes. Typo « rétro voyage » :
- * serif doux (Fraunces) pour les titres, sans-serif nette (Instrument Sans) pour le texte.
+ * Contours encre épais + ombres franches décalées, couleurs chaudes. Typo « ronde et ludique » :
+ * Lilita One (une seule graisse, grasse et arrondie) pour tous les titres, Nunito pour le texte.
  */
 import type { TextStyle, ViewStyle } from 'react-native';
 
@@ -30,12 +30,13 @@ export const colors = {
 } as const;
 
 export const fonts = {
-  display: 'Fraunces_800ExtraBold',
-  displayBold: 'Fraunces_700Bold',
-  displaySemi: 'Fraunces_600SemiBold',
-  body: 'InstrumentSans_400Regular',
-  bodyMedium: 'InstrumentSans_500Medium',
-  bodyBold: 'InstrumentSans_700Bold',
+  display: 'LilitaOne_400Regular',
+  displayBold: 'LilitaOne_400Regular',
+  displaySemi: 'LilitaOne_400Regular',
+  // Nunito est fine en 400 : on la monte d'un cran pour tenir face à Lilita One
+  body: 'Nunito_600SemiBold',
+  bodyMedium: 'Nunito_700Bold',
+  bodyBold: 'Nunito_800ExtraBold',
 } as const;
 
 export const radius = { sm: 10, md: 16, lg: 22, xl: 30, pill: 999 } as const;
@@ -55,9 +56,9 @@ export const outlined: ViewStyle = {
 };
 
 export const text = {
-  display: { fontFamily: fonts.display, fontSize: 40, lineHeight: 44, color: colors.ink, letterSpacing: -0.8 },
-  title: { fontFamily: fonts.display, fontSize: 30, lineHeight: 35, color: colors.ink, letterSpacing: -0.4 },
-  heading: { fontFamily: fonts.displayBold, fontSize: 21, lineHeight: 26, color: colors.ink, letterSpacing: -0.2 },
+  display: { fontFamily: fonts.display, fontSize: 40, lineHeight: 44, color: colors.ink },
+  title: { fontFamily: fonts.display, fontSize: 30, lineHeight: 35, color: colors.ink },
+  heading: { fontFamily: fonts.displayBold, fontSize: 21, lineHeight: 26, color: colors.ink },
   body: { fontFamily: fonts.body, fontSize: 16, lineHeight: 23, color: colors.ink },
   bodyStrong: { fontFamily: fonts.bodyBold, fontSize: 16, lineHeight: 23, color: colors.ink },
   caption: { fontFamily: fonts.bodyMedium, fontSize: 13, lineHeight: 18, color: colors.inkSoft },

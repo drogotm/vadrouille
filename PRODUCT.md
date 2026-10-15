@@ -60,6 +60,9 @@ moyenne + 0,3 × satisfaction du moins bien servi), qui sort 3 options — 🥇 
   de données publiques.
 - L'app ne réserve rien elle-même : elle renvoie vers des sites de réservation.
 - Un mode démo local (amis fictifs) tourne sans backend.
+- **Direction (pas encore construite)** : aller au bout de l'organisation. Après le vote, un
+  agent compare les logements, transports et activités puis réserve pour le groupe ; le but est
+  de décharger au maximum celui ou celle qui organise.
 
 ## Brand Commitments
 

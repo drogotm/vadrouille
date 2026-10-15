@@ -207,3 +207,14 @@ _(liste tenue à jour au fil du développement — chaque entrée : décision + 
       météo éliminatoire) est retiré. Le moteur accepte toujours le niveau 3 (anciennes réponses).
     - Polices : Fraunces (titres) + Instrument Sans (texte), via `@expo-google-fonts/fraunces` et
       `@expo-google-fonts/instrument-sans` ; Bricolage Grotesque et DM Sans retirées.
+24. **Typo « ronde et ludique » (remplace la décision 23 sur les polices)** et **détail des
+    options** (15 oct. 2026, Axelle) :
+    - Fraunces a été jugée trop proche d'un Times : choix final sur rendu réel de 4 options,
+      **Lilita One** (titres, une seule graisse) + **Nunito** (texte, 600/700/800).
+      Paquets `@expo-google-fonts/lilita-one` et `@expo-google-fonts/nunito`.
+    - Chaque option a sa page `/v/<code>/option/<id>` (`OptionDetails`) : mon budget ligne à
+      ligne, liens de réservation, activités, restos, et le bouton de vote tant que le vote est
+      ouvert. Accessible depuis les cartes de vote et depuis le plan (les 3 options y sont
+      toujours affichées).
+    - Vision d'Axelle (pas encore à construire) : à terme, un agent compare logements et
+      transports et réserve pour le groupe ; décharger au maximum l'organisation.
