@@ -155,3 +155,9 @@ _(liste tenue à jour au fil du développement — chaque entrée : décision + 
     accepte jusqu'à 20 (`expected_size`), donc aucun changement SQL. La démo compte 14 potes
     fictifs pour remplir un groupe de 15 ; les 8 ajoutés n'ont aucun critère « indispensable »
     pour qu'un grand groupe ait encore des options (vérifié par `tests/engine/decide.test.ts`).
+18. **Liens de réservation** (15 oct. 2026, `src/lib/booking.ts`) : le plan du séjour propose des
+    liens de RECHERCHE pré-remplis plutôt que des adresses d'offres précises, qui mourraient vite
+    et seraient impossibles à vérifier pour 40 destinations. Logement → Booking (dates + toute la
+    bande, 2 par chambre) ; activités → GetYourGuide ; trajet → selon le mode retenu pour MOI
+    (train → Trainline, bus → BlaBlaCar, avion → Google Vols, voiture → Google Maps). Aucune
+    affiliation, aucune clé d'API, rien n'est réservé par l'app.
