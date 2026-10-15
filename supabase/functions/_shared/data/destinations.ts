@@ -264,6 +264,7 @@ export const DESTINATIONS: readonly Destination[] = [
     climate: 'mediterraneen',
     costIndex: 1.0,
     activityCost: 30,
+    homeCity: 'montpellier',
     pitch: 'Ville étudiante, plages à 20 minutes et soirées jusqu’au bout de la nuit.',
     activities: [
       { name: 'L’Écusson', description: 'Ruelles médiévales et place de la Comédie', envie: 'culture', price: '€' },
@@ -292,6 +293,7 @@ export const DESTINATIONS: readonly Destination[] = [
     climate: 'mediterraneen',
     costIndex: 1.25,
     activityCost: 45,
+    homeCity: 'nice',
     pitch: 'Promenade des Anglais, Vieux-Nice et mer turquoise.',
     activities: [
       { name: 'Colline du Château', description: 'Le panorama sur la baie des Anges', envie: 'nature', price: '€' },

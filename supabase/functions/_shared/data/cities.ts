@@ -10,4 +10,8 @@ export const CITIES: readonly DepartureCity[] = [
   { id: 'nantes', name: 'Nantes', lat: 47.2184, lng: -1.5536 },
   { id: 'toulouse', name: 'Toulouse', lat: 43.6047, lng: 1.4442 },
   { id: 'strasbourg', name: 'Strasbourg', lat: 48.5734, lng: 7.7521 },
+  { id: 'montpellier', name: 'Montpellier', lat: 43.6108, lng: 3.8767 },
+  { id: 'nice', name: 'Nice', lat: 43.7102, lng: 7.262 },
+  { id: 'rennes', name: 'Rennes', lat: 48.1173, lng: -1.6778 },
+  { id: 'grenoble', name: 'Grenoble', lat: 45.1885, lng: 5.7245 },
 ];

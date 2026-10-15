@@ -4,10 +4,12 @@
  * C'est un OUTIL D'AMORÇAGE : heuristiques distance → durée/coût par mode, corrigées par des
  * temps de train connus. Une fois généré, routes.ts fait foi et s'édite à la main.
  * Relancer écrase routes.ts : `node scripts/generate-routes.ts --force`
+ * Ajouter des villes sans toucher aux lignes existantes (retouchées à la main) :
+ * `node scripts/generate-routes.ts --ajouter=rennes,grenoble`
  *
  * Unités : durée aller simple (minutes), coût aller-retour par personne (€).
  */
-import { existsSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { CITIES } from '../supabase/functions/_shared/data/cities.ts';
@@ -111,6 +113,13 @@ const TRAIN_KNOWN: Record<string, Record<string, number>> = {
     barcelone: 200, 'saint-sebastien': 270,
   },
   strasbourg: { colmar: 30, gerardmer: 140, reims: 110, bruxelles: 280, amsterdam: 340, beaune: 170, annecy: 280 },
+  montpellier: {
+    carcassonne: 75, collioure: 115, nice: 260, barcelone: 175, 'aix-en-provence': 75, cassis: 140,
+    luberon: 110, lille: 285,
+  },
+  nice: { cassis: 190, 'aix-en-provence': 185 },
+  rennes: { paris: 90, 'saint-malo': 55, nantes: 75, lille: 200, lyon: 235, 'la-rochelle': 190 },
+  grenoble: { paris: 180, lyon: 80, annecy: 115, chamonix: 200, marseille: 180, 'aix-en-provence': 170 },
 };
 
 function knownTrain(a: string, b: string): number | undefined {
@@ -195,6 +204,37 @@ function route(from: (typeof CITIES)[number], dest: (typeof DESTINATIONS)[number
 }
 
 const out = join(process.cwd(), 'supabase/functions/_shared/data/routes.ts');
+
+function cityLines(city: (typeof CITIES)[number]): string[] {
+  const lines = [`  ${/^[a-z]+$/.test(city.id) ? city.id : `'${city.id}'`}: {`];
+  for (const dest of DESTINATIONS) {
+    if (dest.homeCity === city.id) continue;
+    const row = route(city, dest);
+    const parts = (['train', 'car', 'bus', 'plane'] as const)
+      .filter((m) => row[m])
+      .map((m) => `${m}: [${row[m]![0]}, ${row[m]![1]}]`);
+    const key = /^[a-z]+$/.test(dest.id) ? dest.id : `'${dest.id}'`;
+    lines.push(`    ${key}: { ${parts.join(', ')} },`);
+  }
+  lines.push('  },');
+  return lines;
+}
+
+const addArg = process.argv.find((a) => a.startsWith('--ajouter='));
+if (addArg) {
+  const ids = addArg.slice('--ajouter='.length).split(',').filter(Boolean);
+  let current = readFileSync(out, 'utf8');
+  for (const id of ids) {
+    const city = CITIES.find((c) => c.id === id);
+    if (!city) throw new Error(`Ville inconnue dans cities.ts : ${id}`);
+    if (new RegExp(`^  '?${id}'?: \\{`, 'm').test(current)) throw new Error(`${id} est déjà dans routes.ts`);
+    const end = current.lastIndexOf('};');
+    current = current.slice(0, end) + cityLines(city).join('\n') + '\n' + current.slice(end);
+  }
+  writeFileSync(out, current);
+  console.log(`✅ ${ids.join(', ')} ajouté(s) à ${out}`);
+  process.exit(0);
+}
 if (existsSync(out) && !process.argv.includes('--force')) {
   console.error('routes.ts existe déjà (il fait foi). Utilise --force pour l’écraser.');
   process.exit(1);
@@ -222,19 +262,7 @@ export type RouteTable = Record<
 
 // prettier-ignore
 export const ROUTES: RouteTable = {`);
-for (const city of CITIES) {
-  lines.push(`  ${city.id}: {`);
-  for (const dest of DESTINATIONS) {
-    if (dest.homeCity === city.id) continue;
-    const row = route(city, dest);
-    const parts = (['train', 'car', 'bus', 'plane'] as const)
-      .filter((m) => row[m])
-      .map((m) => `${m}: [${row[m]![0]}, ${row[m]![1]}]`);
-    const key = /^[a-z]+$/.test(dest.id) ? dest.id : `'${dest.id}'`;
-    lines.push(`    ${key}: { ${parts.join(', ')} },`);
-  }
-  lines.push('  },');
-}
+for (const city of CITIES) lines.push(...cityLines(city));
 lines.push('};');
 writeFileSync(out, lines.join('\n') + '\n');
 console.log(`✅ ${out} généré (${CITIES.length} villes × ${DESTINATIONS.length} destinations)`);

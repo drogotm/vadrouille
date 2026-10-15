@@ -161,3 +161,10 @@ _(liste tenue à jour au fil du développement — chaque entrée : décision + 
     bande, 2 par chambre) ; activités → GetYourGuide ; trajet → selon le mode retenu pour MOI
     (train → Trainline, bus → BlaBlaCar, avion → Google Vols, voiture → Google Maps). Aucune
     affiliation, aucune clé d'API, rien n'est réservé par l'app.
+19. **Villes de départ : 12** (15 oct. 2026, demande d'Axelle) : + Montpellier, Nice, Rennes,
+    Grenoble. Montpellier et Nice étaient déjà des destinations : `homeCity` les relie à leur
+    ville. Leurs trajets ont été AJOUTÉS à `routes.ts` par `generate-routes.ts --ajouter=…`
+    (nouvelle option) sans régénérer les 8 villes existantes. Temps de train connus ajoutés
+    pour ces villes. Limite connue, héritée de l'heuristique : les trajets en voiture vers la
+    montagne sont sous-estimés (ex. Lyon → Chamonix 2 h 10), pour les anciennes comme les
+    nouvelles villes — à corriger à la main dans `routes.ts` si besoin.
