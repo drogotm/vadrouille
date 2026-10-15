@@ -1,0 +1,123 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-15T16:00:00+02:00",
+  "title": "Design System: Vadrouille",
+  "extensions": {
+    "colorMeta": {
+      "coucher-de-soleil": { "role": "primary", "displayName": "Coucher de soleil", "canonical": "#FF5B3A", "tonalRamp": ["#5C1607", "#8A220C", "#B52F14", "#D9401F", "#FF5B3A", "#FF8A70", "#FFB7A6", "#FFE5DE"] },
+      "soleil": { "role": "secondary", "displayName": "Soleil", "canonical": "#FFC83D", "tonalRamp": ["#5C4300", "#8A6500", "#B88700", "#E5A800", "#FFC83D", "#FFD877", "#FFE7AD", "#FFF6DE"] },
+      "menthe": { "role": "secondary", "displayName": "Menthe", "canonical": "#7BE0B4", "tonalRamp": ["#0B4A30", "#126B46", "#1B8E5E", "#3DB884", "#7BE0B4", "#A3EACB", "#C9F3E0", "#ECFBF4"] },
+      "flamant": { "role": "tertiary", "displayName": "Flamant", "canonical": "#FF7AB6", "tonalRamp": ["#5C0A30", "#8A1449", "#B82464", "#E54A8C", "#FF7AB6", "#FFA3CC", "#FFC9E1", "#FFEDF5"] },
+      "encre": { "role": "neutral", "displayName": "Encre", "canonical": "#231A3A", "tonalRamp": ["#120D1F", "#231A3A", "#3A2F55", "#544A6B", "#8C84A0", "#B5AFC4", "#DAD6E3", "#F2F0F6"] },
+      "sable": { "role": "neutral", "displayName": "Sable", "canonical": "#FFF4E6", "tonalRamp": ["#5C3F1A", "#8A6330", "#B88A50", "#DDB27C", "#F2CF9F", "#FBE3C4", "#FFF4E6", "#FFFBF5"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Grand titre d'un écran clé et gros chiffres réglables." },
+      "headline": { "displayName": "Headline", "purpose": "La question de chaque étape." },
+      "title": { "displayName": "Title", "purpose": "Titres de cartes, mois du calendrier, libellés de boutons." },
+      "body": { "displayName": "Body", "purpose": "Explications et consignes." },
+      "caption": { "displayName": "Caption", "purpose": "Légendes, estimations, rappels de confidentialité." },
+      "label": { "displayName": "Label", "purpose": "Surtitres de contexte en majuscules." }
+    },
+    "shadows": [
+      { "name": "tampon-leger", "value": "2px 2px 0 #231A3A", "purpose": "Tuile ou week-end non choisi." },
+      { "name": "tampon", "value": "4px 4px 0 #231A3A", "purpose": "Boutons, cartes, tuile choisie." },
+      { "name": "tampon-fort", "value": "5px 5px 0 #231A3A", "purpose": "Bouton principal de grande taille." }
+    ],
+    "motion": [
+      { "name": "enfoncement", "value": "translate(offset, offset) à l'appui, ombre retirée", "purpose": "Retour tactile de tout élément touchable." }
+    ],
+    "breakpoints": [
+      { "name": "contenu-max", "value": "520px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Bouton principal",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "L'action principale de l'écran, fixée en bas.",
+      "html": "<button class=\"ds-btn-primary\">Suivant</button>",
+      "css": ".ds-btn-primary { background: #FF5B3A; color: #FFFFFF; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 18px; letter-spacing: -0.2px; min-height: 60px; padding: 0 24px; border: 2.5px solid #231A3A; border-radius: 999px; box-shadow: 5px 5px 0 #231A3A; cursor: pointer; transition: transform 0.08s, box-shadow 0.08s; } .ds-btn-primary:hover { background: #FF6C4E; } .ds-btn-primary:focus-visible { outline: 3px solid #FFC83D; outline-offset: 3px; } .ds-btn-primary:active { transform: translate(5px, 5px); box-shadow: none; }"
+    },
+    {
+      "name": "Bouton secondaire",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Action complémentaire (annoncer, partager).",
+      "html": "<button class=\"ds-btn-secondary\">Annoncer au groupe</button>",
+      "css": ".ds-btn-secondary { background: #FFFFFF; color: #231A3A; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 18px; min-height: 50px; padding: 0 20px; border: 2.5px solid #231A3A; border-radius: 999px; box-shadow: 4px 4px 0 #231A3A; cursor: pointer; transition: transform 0.08s, box-shadow 0.08s; } .ds-btn-secondary:hover { background: #FFF4E6; } .ds-btn-secondary:focus-visible { outline: 3px solid #FFC83D; outline-offset: 3px; } .ds-btn-secondary:active { transform: translate(4px, 4px); box-shadow: none; }"
+    },
+    {
+      "name": "Champ",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "Saisie du prénom, du nom de la Vadrouille, de la ville.",
+      "html": "<input class=\"ds-field\" placeholder=\"Ex. : Rennes, Angers…\" />",
+      "css": ".ds-field { background: #FFFFFF; color: #231A3A; font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 18px; min-height: 56px; padding: 12px 16px; border: 2.5px solid #231A3A; border-radius: 16px; box-shadow: 3px 3px 0 #231A3A; } .ds-field::placeholder { color: #8C84A0; } .ds-field:focus-visible { outline: 3px solid #FFC83D; outline-offset: 2px; }"
+    },
+    {
+      "name": "Pilule d'info",
+      "kind": "chip",
+      "refersTo": "pill",
+      "description": "Date, nombre de votes, statut de budget.",
+      "html": "<span class=\"ds-pill\">📅 13 – 15 nov.</span>",
+      "css": ".ds-pill { display: inline-flex; gap: 4px; align-items: center; background: #FFEDB8; color: #231A3A; font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 13px; padding: 4px 12px; border: 2px solid #231A3A; border-radius: 999px; }"
+    },
+    {
+      "name": "Carte",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Bloc d'information ou d'action.",
+      "html": "<div class=\"ds-card\"><strong>Ton budget prévisionnel</strong><p>Visible par toi uniquement.</p></div>",
+      "css": ".ds-card { background: #FFFFFF; color: #231A3A; font-family: 'DM Sans', sans-serif; padding: 20px; border: 2.5px solid #231A3A; border-radius: 22px; box-shadow: 4px 4px 0 #231A3A; } .ds-card strong { font-family: 'Bricolage Grotesque', sans-serif; font-size: 21px; } .ds-card p { color: #544A6B; font-size: 13px; margin: 6px 0 0; }"
+    },
+    {
+      "name": "Tuile de choix",
+      "kind": "custom",
+      "refersTo": "tile",
+      "description": "Choix du questionnaire ; prend la couleur de sa question une fois choisie.",
+      "html": "<button class=\"ds-tile\" aria-pressed=\"true\"><span class=\"ds-tile-emoji\">🏔️</span><span class=\"ds-tile-label\">Montagne</span></button>",
+      "css": ".ds-tile { position: relative; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; width: 160px; min-height: 112px; padding: 16px; background: #FFFFFF; color: #231A3A; border: 2.5px solid #231A3A; border-radius: 22px; box-shadow: 2px 2px 0 #231A3A; cursor: pointer; transition: transform 0.08s; } .ds-tile[aria-pressed=\"true\"] { background: #7BE0B4; box-shadow: 4px 4px 0 #231A3A; } .ds-tile:focus-visible { outline: 3px solid #FFC83D; outline-offset: 3px; } .ds-tile:active { transform: translate(2px, 2px); box-shadow: none; } .ds-tile-emoji { font-size: 34px; } .ds-tile-label { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 17px; }"
+    },
+    {
+      "name": "Barre de week-end",
+      "kind": "custom",
+      "refersTo": "weekend-bar",
+      "description": "Week-end proposé dans le calendrier : vendredi → dimanche, un seul toucher.",
+      "html": "<button class=\"ds-weekend\" data-state=\"dispo\"><span>13</span><span>14</span><span>15</span></button>",
+      "css": ".ds-weekend { display: flex; width: 150px; height: 40px; align-items: center; background: #FFFFFF; border: 2.5px solid #231A3A; border-radius: 999px; box-shadow: 2px 2px 0 #231A3A; cursor: pointer; } .ds-weekend span { flex: 1; text-align: center; font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 16px; color: #231A3A; } .ds-weekend[data-state=\"dispo\"] { background: #7BE0B4; box-shadow: 3px 3px 0 #231A3A; } .ds-weekend[data-state=\"peut-etre\"] { background: #FFC83D; box-shadow: 3px 3px 0 #231A3A; } .ds-weekend:focus-visible { outline: 3px solid #FFC83D; outline-offset: 3px; } .ds-weekend:active { transform: translate(1px, 1px); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "La carte postale tamponnée",
+    "overview": "Vadrouille ressemble à une carte postale qu'on s'envoie entre amis : un papier sable chaud, des contours tracés à l'encre violet nuit, et des aplats de couleurs d'été. Chaque élément qu'on peut toucher est posé sur la page comme un tampon : contour épais, ombre franche décalée, et quand on appuie, il s'enfonce exactement de la hauteur de son ombre. L'ambiance est chaleureuse et ludique ; la densité est faible, pour un usage à une main en moins de 2 minutes.",
+    "keyCharacteristics": [
+      "Fond sable, surfaces papier, contours encre de 2,5 px partout.",
+      "Ombres « tampon » décalées sans flou, qui s'écrasent à l'appui.",
+      "Couleurs d'été en aplat, chacune avec un rôle (choix, statut, option de résultat).",
+      "Formes très arrondies : pilules pour les actions, coins de 22 px pour les surfaces.",
+      "Une seule identité, en clair, sur iPhone comme sur le web mobile."
+    ],
+    "rules": [
+      { "name": "La règle une couleur, un sens", "body": "Chaque couleur d'été a un rôle fixe dans tout le parcours (soleil = choisi, menthe = dispo / OK, flamant = envies et Wild Card). Ne jamais en prendre une pour décorer.", "section": "colors" },
+      { "name": "La règle pas de gris", "body": "Les textes secondaires et inactifs restent dans la famille de l'encre violacée, jamais en gris neutre.", "section": "colors" },
+      { "name": "La règle du chiffre roi", "body": "Un montant ou une quantité réglable s'affiche en Bricolage Grotesque très grand, centré, au-dessus de son curseur.", "section": "typography" },
+      { "name": "La règle de l'enfoncement", "body": "À l'appui, l'élément glisse exactement de la longueur de son ombre et l'ombre disparaît. Jamais d'ombre floue ou colorée.", "section": "elevation" },
+      { "name": "La règle plus d'ombre = choisi", "body": "Un élément sélectionné a une ombre plus marquée que ses voisins non sélectionnés.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do dessiner chaque élément touchable avec le contour encre (2,5 px) et une ombre tampon décalée sans flou.",
+      "Do donner à chaque couleur d'été un seul rôle, le même du début à la fin du parcours.",
+      "Do garder une question par écran, le bouton principal en bas, et des zones tactiles d'au moins 44 px.",
+      "Do afficher les montants et durées réglables en Bricolage Grotesque très grand.",
+      "Do signaler chaque prix ou durée comme une estimation, en légende."
+    ],
+    "donts": [
+      "Don't utiliser d'ombre floue, de dégradé de texte ou d'effet de verre : la profondeur vient uniquement du tampon.",
+      "Don't introduire de gris neutre ou de couleur froide hors de la palette.",
+      "Don't laisser une tuile seule s'étirer sur toute la largeur d'une grille.",
+      "Don't utiliser une couleur d'été pour décorer : elle porte toujours un sens."
+    ]
+  }
+}

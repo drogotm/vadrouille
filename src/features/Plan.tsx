@@ -1,4 +1,5 @@
 import { router } from 'expo-router';
+import { useState } from 'react';
 import { Linking, Platform, Pressable, StyleSheet, View } from 'react-native';
 
 import { Button } from '@/components/Button';
@@ -80,6 +81,7 @@ function Suggestions({
 /** Destination choisie : le plan du séjour et MON budget prévisionnel. */
 export function Plan({ state }: { state: VadrouilleState }) {
   const { vadrouille, options, myDetails, tally } = state;
+  const [showAll, setShowAll] = useState(false);
   const winner = options.find((o) => o.id === vadrouille.decidedOptionId) ?? options[0];
   if (!winner) return null;
   const dest = getDestination(winner.destinationId);
@@ -150,6 +152,33 @@ export function Plan({ state }: { state: VadrouilleState }) {
 
       <Suggestions title="🎯 À faire sur place" items={data.suggestions.activities} booking={{ place, dates }} />
       <Suggestions title="🍷 Où manger" items={data.suggestions.restaurants} />
+
+      <Card shadow={0}>
+        <View style={styles.line}>
+          <Heading style={{ flex: 1 }}>Les 3 options proposées</Heading>
+          <Button
+            title={showAll ? 'Masquer' : 'Revoir'}
+            variant="ghost"
+            size="sm"
+            onPress={() => setShowAll((v) => !v)}
+            testID="show-options"
+          />
+        </View>
+        <Caption>Celles calculées à partir de vos réponses, avec le détail pour toi.</Caption>
+      </Card>
+      {showAll
+        ? options.map((o) => {
+            const n = tally[o.id] ?? 0;
+            return (
+              <OptionCard key={o.id} option={o} mine={myDetails[o.id]} highlighted={o.id === winner.id}>
+                <Caption>
+                  {o.id === winner.id ? '🏆 Choisie · ' : ''}
+                  {n} vote{n > 1 ? 's' : ''}
+                </Caption>
+              </OptionCard>
+            );
+          })
+        : null}
 
       <Button
         title="Annoncer à la bande"

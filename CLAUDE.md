@@ -195,3 +195,7 @@ _(liste tenue à jour au fil du développement — chaque entrée : décision + 
     - Grilles de tuiles : une tuile seule sur sa ligne garde une demi-largeur (`TileGrid`).
     - Design : skill Impeccable installé sur le poste d'Axelle (hors dépôt) ; `PRODUCT.md`
       décrit le produit pour lui. Identité « carte postale » conservée.
+22. **Revoir les 3 options après la décision** (15 oct. 2026, demande d'Axelle) : le plan du
+    séjour garde un bouton « Revoir » qui déplie les 3 options calculées (avec la ligne perso,
+    le nombre de votes et la gagnante en avant). Pendant le vote, elles restaient déjà visibles.
+    Design documenté dans `DESIGN.md` (+ `.impeccable/design.json`), généré par Impeccable.
