@@ -35,6 +35,19 @@ function answers(overrides: Partial<Answers> = {}): Answers {
 const personas = (): EngineMember[] =>
   PERSONAS.slice(0, 5).map((p, i) => ({ id: `m${i}-${p.firstName}`, answers: p.answers(W) }));
 
+describe('decide — groupe de 15 (taille maximale)', () => {
+  it('trouve encore 3 options avec l’organisateur et les 14 potes de la démo', () => {
+    const members: EngineMember[] = [
+      { id: 'orga', answers: answers() },
+      ...PERSONAS.map((p, i) => ({ id: `m${i}-${p.firstName}`, answers: p.answers(W) })),
+    ];
+    expect(members).toHaveLength(15);
+    const result = decide({ weekends: W, members, totalMembers: 15 });
+    expect(result.status).toBe('ok');
+    expect(result.options).toHaveLength(3);
+  });
+});
+
 describe('decide — cas nominal', () => {
   const result = decide({ weekends: W, members: personas(), totalMembers: 5 });
 

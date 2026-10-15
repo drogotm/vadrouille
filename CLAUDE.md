@@ -151,3 +151,7 @@ _(liste tenue à jour au fil du développement — chaque entrée : décision + 
     L'app a été vérifiée de bout en bout sur la version web en format mobile (mode démo).
 16. **Lint** : `expo lint` n'est pas configuré (il installerait ESLint) ; le garde-fou du dépôt
     est `npm run verify` (typecheck + tests + scan de secrets).
+17. **Taille du groupe : 2 à 15 personnes** (15 oct. 2026, demande d'Axelle ; avant : 12). La base
+    accepte jusqu'à 20 (`expected_size`), donc aucun changement SQL. La démo compte 14 potes
+    fictifs pour remplir un groupe de 15 ; les 8 ajoutés n'ont aucun critère « indispensable »
+    pour qu'un grand groupe ait encore des options (vérifié par `tests/engine/decide.test.ts`).

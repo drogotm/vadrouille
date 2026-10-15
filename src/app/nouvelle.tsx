@@ -178,7 +178,7 @@ export default function Nouvelle() {
           <Slider
             value={size}
             min={2}
-            max={12}
+            max={15}
             step={1}
             onChange={setSize}
             accessibilityLabel="Taille du groupe"
