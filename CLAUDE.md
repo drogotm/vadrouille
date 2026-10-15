@@ -218,3 +218,9 @@ _(liste tenue à jour au fil du développement — chaque entrée : décision + 
       toujours affichées).
     - Vision d'Axelle (pas encore à construire) : à terme, un agent compare logements et
       transports et réserve pour le groupe ; décharger au maximum l'organisation.
+25. **Polices absentes en ligne (corrigé le 15 oct. 2026)** : Expo exporte les fichiers des
+    paquets dans `dist/assets/node_modules/`, que Vercel exclut de tout déploiement ; en ligne,
+    les polices renvoyaient la page HTML et tout s'affichait en Times (alors que tout allait bien
+    en local). `npm run build:web` lance maintenant `scripts/prepare-web-deploy.ts`, qui renomme
+    ce dossier en `assets/pkg/`, corrige les chemins et écrit `dist/vercel.json`. Toujours
+    vérifier le rendu sur l'URL déployée, pas seulement en local.
