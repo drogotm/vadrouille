@@ -9,6 +9,7 @@ import { Screen } from '@/components/Screen';
 import { Slider } from '@/components/Slider';
 import { Tile } from '@/components/Tile';
 import { TopBar } from '@/components/TopBar';
+import { Field } from '@/components/Field';
 import { Body, Caption, Display, Strong, Title } from '@/components/Typography';
 import {
   ambianceLabel,
@@ -24,6 +25,7 @@ import {
   WEATHER_LABELS,
   type Answers,
   type Availability,
+  type CityId,
   type ComfortLevel,
   type CriterionKey,
   type Importance,
@@ -36,7 +38,11 @@ import { haptic } from '@/lib/haptics';
 import { useVadrouille } from '@/lib/useVadrouille';
 import { BORDER, colors, fonts, hardShadow, radius, space } from '@/theme/tokens';
 
-type Draft = Omit<Answers, 'availability'> & { availability: Record<string, Availability | undefined> };
+type Draft = Omit<Answers, 'availability' | 'departureCity'> & {
+  availability: Record<string, Availability | undefined>;
+  /** undefined tant que « Autre » est ouvert sans ville reconnue ni choisie */
+  departureCity: CityId | undefined;
+};
 
 const blank = (weekends: string[]): Draft => ({
   version: 1,
@@ -54,6 +60,110 @@ const blank = (weekends: string[]): Draft => ({
 });
 
 const toggle = <T,>(list: T[], item: T): T[] => (list.includes(item) ? list.filter((x) => x !== item) : [...list, item]);
+
+/** Les villes affichées d'office ; les autres passent par « Autre ». */
+const MAIN_CITIES: CityId[] = ['paris', 'lyon', 'marseille', 'bordeaux', 'lille'];
+
+/** « Saint-Étienne » → « saint etienne » : pour reconnaître une ville tapée à la main. */
+const normalize = (x: string) =>
+  x
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
+
+/** 5 grandes villes + « Autre » : ville tapée, reconnue si on la connaît, sinon la grande ville la plus proche. */
+function CityStep({ d, set }: { d: Draft; set: SetDraft }) {
+  const known = (id: CityId | undefined) => CITIES.find((c) => c.id === id);
+  const [other, setOther] = useState(() => d.departureCity !== undefined && !MAIN_CITIES.includes(d.departureCity));
+  const [typed, setTyped] = useState(() => (other ? (known(d.departureCity)?.name ?? '') : ''));
+
+  const query = normalize(typed);
+  const exact = CITIES.find((c) => normalize(c.name) === query);
+  const suggestions = query.length >= 2 && !exact ? CITIES.filter((c) => normalize(c.name).startsWith(query)) : [];
+  const unknown = query.length >= 2 && !exact && suggestions.length === 0;
+
+  const onType = (text: string) => {
+    setTyped(text);
+    const match = CITIES.find((c) => normalize(c.name) === normalize(text));
+    set({ departureCity: match?.id });
+  };
+
+  return (
+    <View style={{ gap: space(4) }}>
+      <View style={styles.grid}>
+        {MAIN_CITIES.map((id) => (
+          <Tile
+            key={id}
+            compact
+            style={styles.cityTile}
+            label={known(id)?.name ?? id}
+            selected={!other && d.departureCity === id}
+            onPress={() => {
+              setOther(false);
+              set({ departureCity: id });
+            }}
+          />
+        ))}
+        <Tile
+          compact
+          style={styles.cityTile}
+          label="Autre"
+          emoji="✏️"
+          selected={other}
+          testID="city-other"
+          onPress={() => {
+            setOther(true);
+            set({ departureCity: exact?.id });
+          }}
+        />
+      </View>
+
+      {other ? (
+        <View style={{ gap: space(3) }}>
+          <Field
+            label="Ta ville"
+            placeholder="Ex. : Rennes, Angers, Genève…"
+            value={typed}
+            onChangeText={onType}
+            autoFocus
+            autoCapitalize="words"
+            autoCorrect={false}
+            testID="city-input"
+          />
+          {exact ? <Caption>✅ On a les trajets depuis {exact.name}.</Caption> : null}
+          {suggestions.length > 0 ? (
+            <View style={styles.grid}>
+              {suggestions.map((c) => (
+                <Tile key={c.id} compact label={c.name} selected={false} onPress={() => onType(c.name)} />
+              ))}
+            </View>
+          ) : null}
+          {unknown ? (
+            <View style={{ gap: space(3) }}>
+              <Body>
+                On n’a pas encore les trajets depuis « {typed.trim()} ». Quelle grande ville est la plus proche de chez
+                toi ? On calculera ton trajet depuis là.
+              </Body>
+              <View style={styles.grid}>
+                {CITIES.map((c) => (
+                  <Tile
+                    key={c.id}
+                    compact
+                    label={c.name}
+                    selected={d.departureCity === c.id}
+                    onPress={() => set({ departureCity: c.id })}
+                  />
+                ))}
+              </View>
+            </View>
+          ) : null}
+        </View>
+      ) : null}
+    </View>
+  );
+}
 
 const AVAILABILITY: { value: Availability; label: string; emoji: string; color: string }[] = [
   { value: 'yes', label: 'Dispo', emoji: '✅', color: colors.mint },
@@ -155,21 +265,8 @@ const STEPS: StepDef[] = [
     emoji: '📍',
     title: 'Tu pars d’où ?',
     hint: 'Ton trajet et ton budget sont calculés depuis ta ville.',
-    valid: () => true,
-    render: (d, set) => (
-      <View style={styles.grid}>
-        {CITIES.map((c) => (
-          <Tile
-            key={c.id}
-            compact
-            style={styles.cityTile}
-            label={c.name}
-            selected={d.departureCity === c.id}
-            onPress={() => set({ departureCity: c.id })}
-          />
-        ))}
-      </View>
-    ),
+    valid: (d) => d.departureCity !== undefined,
+    render: (d, set) => <CityStep d={d} set={set} />,
   },
   {
     key: 'budget',
@@ -234,30 +331,6 @@ const STEPS: StepDef[] = [
     ),
   },
   {
-    key: 'transports',
-    emoji: '🚆',
-    title: 'Tu voyages comment ?',
-    hint: 'Coche tout ce qui te va.',
-    criterion: 'transports',
-    valid: (d) => d.transports.length > 0,
-    render: (d, set) => (
-      <View style={styles.grid}>
-        {TRANSPORT_MODES.map((m) => (
-          <Tile
-            key={m}
-            compact
-            kind="check"
-            label={TRANSPORT_LABELS[m].label}
-            emoji={TRANSPORT_LABELS[m].emoji}
-            selected={d.transports.includes(m)}
-            onPress={() => set((cur) => ({ transports: toggle(cur.transports, m) }))}
-            color={colors.sky}
-          />
-        ))}
-      </View>
-    ),
-  },
-  {
     key: 'cadres',
     emoji: '🌊',
     title: 'Plutôt quel décor ?',
@@ -298,8 +371,38 @@ const STEPS: StepDef[] = [
             label={ENVIE_LABELS[e].label}
             emoji={ENVIE_LABELS[e].emoji}
             selected={d.envies.includes(e)}
-            onPress={() => set((cur) => ({ envies: toggle(cur.envies, e) }))}
+            onPress={() =>
+              set((cur) => {
+                const envies = toggle(cur.envies, e);
+                // plus de sport : le vélo disparaît des transports
+                return envies.includes('sport') ? { envies } : { envies, transports: cur.transports.filter((m) => m !== 'bike') };
+              })
+            }
             color={colors.flamingo}
+          />
+        ))}
+      </View>
+    ),
+  },
+  {
+    key: 'transports',
+    emoji: '🚆',
+    title: 'Tu voyages comment ?',
+    hint: 'Coche tout ce qui te va. Le vélo apparaît si tu as coché Sport.',
+    criterion: 'transports',
+    valid: (d) => d.transports.length > 0,
+    render: (d, set) => (
+      <View style={styles.grid}>
+        {TRANSPORT_MODES.filter((m) => m !== 'bike' || d.envies.includes('sport')).map((m) => (
+          <Tile
+            key={m}
+            compact
+            kind="check"
+            label={TRANSPORT_LABELS[m].label}
+            emoji={TRANSPORT_LABELS[m].emoji}
+            selected={d.transports.includes(m)}
+            onPress={() => set((cur) => ({ transports: toggle(cur.transports, m) }))}
+            color={colors.sky}
           />
         ))}
       </View>
@@ -398,7 +501,10 @@ export default function Questions() {
 
   // on initialise le brouillon une seule fois, à partir de mes réponses existantes s'il y en a
   useEffect(() => {
-    if (data && !draft) setDraft(data.myAnswers ?? blank(data.vadrouille.weekends));
+    if (!data || draft) return;
+    const fresh = blank(data.vadrouille.weekends);
+    if (data.isOrganizer) fresh.availability = Object.fromEntries(data.vadrouille.weekends.map((w) => [w, 'yes']));
+    setDraft(data.myAnswers ?? fresh);
   }, [data, draft]);
 
   if (sessionLoading || isLoading) return <Screen><LoadingView /></Screen>;
@@ -417,8 +523,10 @@ export default function Questions() {
 
   const { weekends, nights } = data.vadrouille;
   const locked = data.vadrouille.status !== 'collecting';
-  const step = STEPS[index];
-  const isLast = index === STEPS.length - 1;
+  // l'orga a donné ses dispos en choisissant les week-ends : on ne les redemande pas
+  const steps = data.isOrganizer ? STEPS.filter((s) => s.key !== 'availability') : STEPS;
+  const step = steps[index];
+  const isLast = index === steps.length - 1;
   const set: SetDraft = (patch) =>
     setDraft((d) => (d ? { ...d, ...(typeof patch === 'function' ? patch(d) : patch) } : d));
   const importance = step.criterion ? (draft.importance[step.criterion] ?? 'souhaitable') : 'souhaitable';
@@ -429,7 +537,8 @@ export default function Questions() {
     set({ importance: value === 'souhaitable' ? rest : { ...rest, [step.criterion]: value } });
   };
 
-  const back = () => (index > 0 ? setIndex(index - 1) : router.canGoBack() ? router.back() : router.replace(`/v/${code}` as never));
+  // à la 1re question, retour à la page de la Vadrouille (on peut y arriver directement depuis la création)
+  const back = () => (index > 0 ? setIndex(index - 1) : router.replace(`/v/${code}` as never));
 
   const next = async () => {
     setSaveError(null);
@@ -468,7 +577,7 @@ export default function Questions() {
 
   return (
     <Screen
-      header={<TopBar title={`${index + 1} / ${STEPS.length}`} onBack={back} />}
+      header={<TopBar title={`${index + 1} / ${steps.length}`} onBack={back} />}
       footer={
         <>
           {saveError ? <Caption color={colors.danger}>{saveError}</Caption> : null}
@@ -483,7 +592,7 @@ export default function Questions() {
         </>
       }
     >
-      <ProgressBar value={(index + 1) / STEPS.length} />
+      <ProgressBar value={(index + 1) / steps.length} />
       <View style={{ gap: space(1) }}>
         <Text style={styles.stepEmoji}>{step.emoji}</Text>
         <Title>{step.title}</Title>

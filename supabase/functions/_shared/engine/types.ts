@@ -23,9 +23,20 @@ export type CityId =
   | 'rennes'
   | 'grenoble';
 
-export type TransportMode = 'train' | 'car' | 'plane' | 'bus';
+/** `bike` : seulement pour qui l'a coché, et seulement pour une destination proche (catalog). */
+export type TransportMode = 'train' | 'car' | 'plane' | 'bus' | 'bike';
 export type Cadre = 'mer' | 'montagne' | 'campagne' | 'ville';
-export type Envie = 'sport' | 'fete' | 'culture' | 'gastronomie' | 'nature' | 'bien_etre';
+export type Envie =
+  | 'sport'
+  | 'fete'
+  | 'culture'
+  | 'gastronomie'
+  | 'nature'
+  | 'bien_etre'
+  | 'spectacles'
+  | 'sensations'
+  | 'insolite'
+  | 'ludique';
 
 /** 0 = roots, 1 = confortable, 2 = premium */
 export type ComfortLevel = 0 | 1 | 2;

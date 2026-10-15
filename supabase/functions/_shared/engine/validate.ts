@@ -16,9 +16,12 @@ export const CITY_IDS: readonly CityId[] = [
   'paris', 'lyon', 'marseille', 'bordeaux', 'lille', 'nantes', 'toulouse', 'strasbourg',
   'montpellier', 'nice', 'rennes', 'grenoble',
 ];
-export const TRANSPORT_MODES: readonly TransportMode[] = ['train', 'car', 'bus', 'plane'];
+export const TRANSPORT_MODES: readonly TransportMode[] = ['train', 'car', 'bus', 'plane', 'bike'];
 export const CADRES: readonly Cadre[] = ['mer', 'montagne', 'campagne', 'ville'];
-export const ENVIES: readonly Envie[] = ['sport', 'fete', 'culture', 'gastronomie', 'nature', 'bien_etre'];
+export const ENVIES: readonly Envie[] = [
+  'sport', 'fete', 'culture', 'gastronomie', 'nature', 'bien_etre',
+  'spectacles', 'sensations', 'insolite', 'ludique',
+];
 export const CRITERIA: readonly CriterionKey[] = [
   'budget', 'travelTime', 'transports', 'cadres', 'envies', 'comfort', 'weather', 'ambiance',
 ];

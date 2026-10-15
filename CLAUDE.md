@@ -168,3 +168,19 @@ _(liste tenue à jour au fil du développement — chaque entrée : décision + 
     pour ces villes. Limite connue, héritée de l'heuristique : les trajets en voiture vers la
     montagne sont sous-estimés (ex. Lyon → Chamonix 2 h 10), pour les anciennes comme les
     nouvelles villes — à corriger à la main dans `routes.ts` si besoin.
+20. **Retours d'Axelle sur la V2** (15 oct. 2026) :
+    - **Parcours direct** : après la création, l'orga arrive directement sur le questionnaire
+      (plus de page intermédiaire). Ses week-ends choisis valent dispos (« dispo » partout) :
+      la question des dispos n'est posée qu'aux invités, en premier.
+    - **Villes** : 5 tuiles (Paris, Lyon, Marseille, Bordeaux, Lille) + « Autre ». La ville tapée
+      est reconnue parmi les 12 connues (suggestions à la frappe) ; sinon on demande la grande
+      ville la plus proche, et le trajet est calculé depuis celle-ci. La ville tapée n'est pas
+      enregistrée (seule `departureCity` l'est).
+    - **Vélo** (`bike`) : proposé dans les transports seulement si l'envie Sport est cochée.
+      Trajet calculé à la volée (`catalog.ts`) : vol d'oiseau × 1,2, 18 km/h, gratuit, au plus
+      100 km de route. Le moteur ne l'envisage QUE pour qui l'a coché (sinon un trajet gratuit
+      serait retenu pour des gens qui n'en veulent pas).
+    - **4 envies en plus** : Concerts & spectacles, Sensations fortes (karting, accrobranche…),
+      Insolite, Jeux & ludique (escape game, bowling…). Intensités estimées pour les 40
+      destinations ; pas encore de suggestions d'activités dédiées dans le plan.
+    - Ordre des questions : envies avant transports (pour savoir si on propose le vélo).

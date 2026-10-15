@@ -57,7 +57,7 @@ export interface MemberEvaluation {
 
 const EPS = 1e-9;
 /** ordre de préférence à score égal : le plus sobre d'abord */
-const MODE_RANK: Record<TransportMode, number> = { train: 0, bus: 1, car: 2, plane: 3 };
+const MODE_RANK: Record<TransportMode, number> = { bike: 0, train: 1, bus: 2, car: 3, plane: 4 };
 
 interface TransportOption {
   mode: TransportMode | null;
@@ -135,6 +135,8 @@ export function evaluateMember(
   const options: TransportOption[] = atHome
     ? [{ mode: null, minutes: 0, cost: 0, accepted: true }]
     : TRANSPORT_MODES.flatMap((mode) => {
+        // le vélo n'est jamais imposé : seulement pour qui l'a coché
+        if (mode === 'bike' && !a.transports.includes('bike')) return [];
         const r = catalog.route(a.departureCity, dest.id, mode);
         // un trajet trop long n'est pas une option de week-end, quel que soit le mode
         if (!r || r.minutes > config.maxOneWayMinutes) return [];

@@ -99,5 +99,15 @@ export function transportUrl(
           travelmode: 'driving',
         })}`,
       };
+    case 'bike':
+      return {
+        site: 'Google Maps',
+        url: `https://www.google.com/maps/dir/?${q({
+          api: 1,
+          origin: fromCity,
+          destination: place,
+          travelmode: 'bicycling',
+        })}`,
+      };
   }
 }

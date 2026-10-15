@@ -29,6 +29,7 @@ export const TRANSPORT_LABELS: Record<TransportMode, { label: string; emoji: str
   car: { label: 'Voiture', emoji: '🚗' },
   plane: { label: 'Avion', emoji: '✈️' },
   bus: { label: 'Bus', emoji: '🚌' },
+  bike: { label: 'Vélo', emoji: '🚲' },
 };
 
 export const CADRE_LABELS: Record<Cadre, { label: string; emoji: string; wanted: string }> = {
@@ -45,6 +46,10 @@ export const ENVIE_LABELS: Record<Envie, { label: string; emoji: string; wanted:
   gastronomie: { label: 'Gastronomie', emoji: '🍷', wanted: 'voulaient gastronomie' },
   nature: { label: 'Nature', emoji: '🌲', wanted: 'voulaient de la nature' },
   bien_etre: { label: 'Bien-être', emoji: '🧖', wanted: 'voulaient du bien-être' },
+  spectacles: { label: 'Concerts & spectacles', emoji: '🎤', wanted: 'voulaient concerts ou spectacles' },
+  sensations: { label: 'Sensations fortes', emoji: '🎢', wanted: 'voulaient des sensations fortes' },
+  insolite: { label: 'Insolite', emoji: '🦄', wanted: 'voulaient de l’insolite' },
+  ludique: { label: 'Jeux & ludique', emoji: '🎲', wanted: 'voulaient jouer' },
 };
 
 export const COMFORT_LABELS: Record<ComfortId, { label: string; emoji: string; description: string }> = {

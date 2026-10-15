@@ -84,7 +84,7 @@ export function Collecting({ state, refresh }: { state: VadrouilleState; refresh
       {!myAnswers ? (
         <Card color={colors.sun}>
           <Heading>À toi de jouer ✍️</Heading>
-          <Body>10 questions, 2 minutes. Tes réponses restent privées.</Body>
+          <Body>2 minutes, une question par écran. Tes réponses restent privées.</Body>
           <Button
             title="Répondre au questionnaire"
             variant="dark"

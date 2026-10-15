@@ -73,7 +73,8 @@ export default function Nouvelle() {
       const v = await backend.create({ name, weekends, expectedSize: size });
       haptic.success();
       await client.invalidateQueries({ queryKey: ['mine'] });
-      router.replace(`/v/${v.inviteCode}` as never);
+      // on enchaîne directement sur le questionnaire (les dates choisies valent dispos de l’orga)
+      router.replace(`/v/${v.inviteCode}/questions` as never);
     } catch (e) {
       setError(errorMessage(e));
       setBusy(false);
