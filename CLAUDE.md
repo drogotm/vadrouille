@@ -184,3 +184,14 @@ _(liste tenue à jour au fil du développement — chaque entrée : décision + 
       Insolite, Jeux & ludique (escape game, bowling…). Intensités estimées pour les 40
       destinations ; pas encore de suggestions d'activités dédiées dans le plan.
     - Ordre des questions : envies avant transports (pour savoir si on propose le vélo).
+21. **Calendrier, décors, grilles** (15 oct. 2026, retours d'Axelle) :
+    - Les dispos se choisissent dans un **calendrier mois par mois** (`WeekendCalendar`) : seuls
+      les week-ends proposés se touchent, d'un seul geste vendredi → dimanche ; les autres jours
+      sont grisés. À la création : 2 à 4 week-ends. Pour les invités : 1 toucher = dispo,
+      2 = peut-être, 3 = pas dispo ; un week-end jamais touché est enregistré « pas dispo ».
+    - **Décors : 2 minimum, ou « Peu importe »** (on ne peut plus en cocher un seul). Choix
+      d'Axelle pour éviter qu'un décor unique, imposé à tout le groupe, bloque les options.
+      Le moteur, lui, accepte toujours une liste d'un élément (anciennes réponses, démo).
+    - Grilles de tuiles : une tuile seule sur sa ligne garde une demi-largeur (`TileGrid`).
+    - Design : skill Impeccable installé sur le poste d'Axelle (hors dépôt) ; `PRODUCT.md`
+      décrit le produit pour lui. Identité « carte postale » conservée.

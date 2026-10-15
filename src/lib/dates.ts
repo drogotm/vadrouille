@@ -62,3 +62,36 @@ export function daysUntil(fridayIso: string, now = new Date()): number {
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 12);
   return Math.round((parse(fridayIso).getTime() - today.getTime()) / 86_400_000);
 }
+
+/** « novembre 2026 » */
+export function monthTitle(year: number, month: number): string {
+  return `${MONTHS_LONG[month]} ${year}`;
+}
+
+/** Mois (année, index 0–11) d'une date ISO. */
+export function monthOf(iso: string): { year: number; month: number } {
+  const d = parse(iso);
+  return { year: d.getFullYear(), month: d.getMonth() };
+}
+
+/**
+ * Semaines complètes (lundi → dimanche) qui couvrent un mois, en dates ISO. Les jours des mois
+ * voisins sont inclus pour garder une grille régulière : vendredi, samedi et dimanche tombent
+ * toujours sur la même ligne.
+ */
+export function monthWeeks(year: number, month: number): string[][] {
+  const first = new Date(year, month, 1, 12);
+  const start = new Date(first);
+  start.setDate(1 - ((first.getDay() + 6) % 7)); // recule jusqu'au lundi
+  const weeks: string[][] = [];
+  const d = new Date(start);
+  while (weeks.length === 0 || d.getMonth() === month) {
+    const week: string[] = [];
+    for (let i = 0; i < 7; i++) {
+      week.push(toIso(d));
+      d.setDate(d.getDate() + 1);
+    }
+    weeks.push(week);
+  }
+  return weeks;
+}

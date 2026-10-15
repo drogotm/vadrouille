@@ -1,7 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { Button } from '@/components/Button';
 import { Field } from '@/components/Field';
@@ -9,13 +9,14 @@ import { ProgressBar } from '@/components/Pill';
 import { Screen } from '@/components/Screen';
 import { Slider } from '@/components/Slider';
 import { TopBar } from '@/components/TopBar';
+import { WeekendCalendar } from '@/components/WeekendCalendar';
 import { Body, Caption, Display, Title } from '@/components/Typography';
 import { backend } from '@/lib/backend';
-import { upcomingWeekends, weekendParts, weekendRange } from '@/lib/dates';
+import { upcomingWeekends } from '@/lib/dates';
 import { errorMessage } from '@/lib/errors';
 import { haptic } from '@/lib/haptics';
 import { useSession } from '@/lib/session';
-import { BORDER, colors, fonts, hardShadow, radius, space } from '@/theme/tokens';
+import { colors, space } from '@/theme/tokens';
 
 type Step = 'me' | 'name' | 'weekends' | 'size';
 
@@ -46,7 +47,6 @@ export default function Nouvelle() {
           : true;
 
   const toggleWeekend = (w: string) => {
-    haptic.select();
     setWeekends((cur) => (cur.includes(w) ? cur.filter((x) => x !== w) : cur.length >= 4 ? cur : [...cur, w]));
   };
 
@@ -142,28 +142,16 @@ export default function Nouvelle() {
 
       {step === 'weekends' ? (
         <>
-          <Title>Quels week-ends sont possibles ?</Title>
-          <Body color={colors.inkSoft}>Choisis-en 2 à 4. On retiendra celui où il y a le plus de monde.</Body>
-          <View style={styles.grid}>
-            {candidates.map((w) => {
-              const on = weekends.includes(w);
-              const parts = weekendParts(w);
-              return (
-                <Pressable
-                  key={w}
-                  accessibilityRole="checkbox"
-                  accessibilityState={{ checked: on }}
-                  accessibilityLabel={`Week-end du ${weekendRange(w)}`}
-                  onPress={() => toggleWeekend(w)}
-                  style={[styles.weekend, on && styles.weekendOn, on ? hardShadow(4) : hardShadow(2)]}
-                >
-                  <Text style={styles.weekendMonth}>{parts.month}</Text>
-                  <Text style={styles.weekendDay}>{parts.day}</Text>
-                  <Text style={styles.weekendRange}>{weekendRange(w)}</Text>
-                </Pressable>
-              );
-            })}
-          </View>
+          <Title>Quels week-ends te vont ?</Title>
+          <Body color={colors.inkSoft}>
+            Choisis-en 2 à 4 : ce sont tes dispos. On retiendra celui où le groupe est le plus nombreux.
+          </Body>
+          <WeekendCalendar
+            weekends={candidates}
+            mark={(w) => (weekends.includes(w) ? 'selected' : null)}
+            onPress={toggleWeekend}
+            disabled={() => weekends.length >= 4}
+          />
           <Caption>{weekends.length}/4 sélectionnés · du vendredi soir au dimanche</Caption>
         </>
       ) : null}
@@ -192,21 +180,6 @@ export default function Nouvelle() {
 }
 
 const styles = StyleSheet.create({
-  grid: { flexDirection: 'row', flexWrap: 'wrap', gap: space(3) },
-  weekend: {
-    flexBasis: '29%',
-    flexGrow: 1,
-    alignItems: 'center',
-    paddingVertical: space(3),
-    borderRadius: radius.md,
-    borderWidth: BORDER,
-    borderColor: colors.ink,
-    backgroundColor: colors.paper,
-  },
-  weekendOn: { backgroundColor: colors.sun },
-  weekendMonth: { fontFamily: fonts.bodyBold, fontSize: 12, color: colors.sunset, textTransform: 'uppercase' },
-  weekendDay: { fontFamily: fonts.display, fontSize: 28, lineHeight: 32, color: colors.ink },
-  weekendRange: { fontFamily: fonts.bodyMedium, fontSize: 11, color: colors.inkSoft },
   sizeBox: { alignItems: 'center', paddingVertical: space(4) },
   sizeValue: { fontSize: 88, lineHeight: 92 },
 });

@@ -1,5 +1,5 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect, useState, type ReactNode } from 'react';
+import { Children, useEffect, useState, type ReactNode } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Button } from '@/components/Button';
@@ -9,6 +9,7 @@ import { Screen } from '@/components/Screen';
 import { Slider } from '@/components/Slider';
 import { Tile } from '@/components/Tile';
 import { TopBar } from '@/components/TopBar';
+import { AvailabilityLegend, WeekendCalendar } from '@/components/WeekendCalendar';
 import { Field } from '@/components/Field';
 import { Body, Caption, Display, Strong, Title } from '@/components/Typography';
 import {
@@ -32,11 +33,10 @@ import {
   type WeatherImportance,
 } from '@/engine';
 import { backend } from '@/lib/backend';
-import { weekendRange } from '@/lib/dates';
 import { errorMessage } from '@/lib/errors';
 import { haptic } from '@/lib/haptics';
 import { useVadrouille } from '@/lib/useVadrouille';
-import { BORDER, colors, fonts, hardShadow, radius, space } from '@/theme/tokens';
+import { colors, fonts, radius, space } from '@/theme/tokens';
 
 type Draft = Omit<Answers, 'availability' | 'departureCity'> & {
   availability: Record<string, Availability | undefined>;
@@ -60,6 +60,20 @@ const blank = (weekends: string[]): Draft => ({
 });
 
 const toggle = <T,>(list: T[], item: T): T[] => (list.includes(item) ? list.filter((x) => x !== item) : [...list, item]);
+
+/** Grille 2 colonnes : un nombre impair de tuiles garde la dernière à demi-largeur. */
+function TileGrid({ children }: { children: ReactNode }) {
+  const items = Children.toArray(children);
+  return (
+    <View style={styles.grid}>
+      {items}
+      {items.length % 2 === 1 ? <View style={styles.gridSpacer} /> : null}
+    </View>
+  );
+}
+
+/** Toucher un week-end : pas dispo → dispo → peut-être → pas dispo. */
+const NEXT_AVAILABILITY: Record<Availability, Availability> = { no: 'yes', yes: 'maybe', maybe: 'no' };
 
 /** Les villes affichées d'office ; les autres passent par « Autre ». */
 const MAIN_CITIES: CityId[] = ['paris', 'lyon', 'marseille', 'bordeaux', 'lille'];
@@ -92,7 +106,7 @@ function CityStep({ d, set }: { d: Draft; set: SetDraft }) {
 
   return (
     <View style={{ gap: space(4) }}>
-      <View style={styles.grid}>
+      <TileGrid>
         {MAIN_CITIES.map((id) => (
           <Tile
             key={id}
@@ -118,7 +132,7 @@ function CityStep({ d, set }: { d: Draft; set: SetDraft }) {
             set({ departureCity: exact?.id });
           }}
         />
-      </View>
+      </TileGrid>
 
       {other ? (
         <View style={{ gap: space(3) }}>
@@ -134,11 +148,11 @@ function CityStep({ d, set }: { d: Draft; set: SetDraft }) {
           />
           {exact ? <Caption>✅ On a les trajets depuis {exact.name}.</Caption> : null}
           {suggestions.length > 0 ? (
-            <View style={styles.grid}>
+            <TileGrid>
               {suggestions.map((c) => (
                 <Tile key={c.id} compact label={c.name} selected={false} onPress={() => onType(c.name)} />
               ))}
-            </View>
+            </TileGrid>
           ) : null}
           {unknown ? (
             <View style={{ gap: space(3) }}>
@@ -146,7 +160,7 @@ function CityStep({ d, set }: { d: Draft; set: SetDraft }) {
                 On n’a pas encore les trajets depuis « {typed.trim()} ». Quelle grande ville est la plus proche de chez
                 toi ? On calculera ton trajet depuis là.
               </Body>
-              <View style={styles.grid}>
+              <TileGrid>
                 {CITIES.map((c) => (
                   <Tile
                     key={c.id}
@@ -156,7 +170,7 @@ function CityStep({ d, set }: { d: Draft; set: SetDraft }) {
                     onPress={() => set({ departureCity: c.id })}
                   />
                 ))}
-              </View>
+              </TileGrid>
             </View>
           ) : null}
         </View>
@@ -164,12 +178,6 @@ function CityStep({ d, set }: { d: Draft; set: SetDraft }) {
     </View>
   );
 }
-
-const AVAILABILITY: { value: Availability; label: string; emoji: string; color: string }[] = [
-  { value: 'yes', label: 'Dispo', emoji: '✅', color: colors.mint },
-  { value: 'maybe', label: 'Peut-être', emoji: '🤔', color: colors.sun },
-  { value: 'no', label: 'Pas dispo', emoji: '❌', color: colors.sunsetSoft },
-];
 
 const IMPORTANCE: { value: Importance; label: string; emoji: string }[] = [
   { value: 'negociable', label: 'Négociable', emoji: '🤷' },
@@ -226,39 +234,28 @@ const STEPS: StepDef[] = [
     key: 'availability',
     emoji: '📅',
     title: 'T’es dispo quand ?',
-    hint: 'Réponds pour chaque week-end.',
-    valid: (d, weekends) => weekends.every((w) => d.availability[w] !== undefined),
-    render: (d, set, { weekends, nights }) => (
-      <View style={{ gap: space(4) }}>
-        {weekends.map((w) => (
-          <View key={w} style={{ gap: space(2) }}>
-            <Strong>{weekendRange(w, nights)}</Strong>
-            <View style={styles.availabilityRow}>
-              {AVAILABILITY.map((a) => {
-                const on = d.availability[w] === a.value;
-                return (
-                  <Pressable
-                    key={a.value}
-                    testID={`avail-${a.value}`}
-                    accessibilityRole="radio"
-                    accessibilityState={{ selected: on }}
-                    accessibilityLabel={`${a.label}, ${weekendRange(w, nights)}`}
-                    onPress={() => {
-                      haptic.select();
-                      set((cur) => ({ availability: { ...cur.availability, [w]: a.value } }));
-                    }}
-                    style={[styles.availability, on && { backgroundColor: a.color }, hardShadow(on ? 3 : 1)]}
-                  >
-                    <Text style={styles.availabilityEmoji}>{a.emoji}</Text>
-                    <Text style={styles.availabilityLabel}>{a.label}</Text>
-                  </Pressable>
-                );
-              })}
-            </View>
-          </View>
-        ))}
-      </View>
-    ),
+    hint: 'Touche les week-ends où tu peux venir.',
+    valid: () => true,
+    render: (d, set, { weekends, nights }) => {
+      const none = weekends.every((w) => (d.availability[w] ?? 'no') === 'no');
+      return (
+        <View style={{ gap: space(4) }}>
+          <AvailabilityLegend />
+          <WeekendCalendar
+            weekends={weekends}
+            nights={nights}
+            mark={(w) => {
+              const a = d.availability[w];
+              return a === 'yes' ? 'yes' : a === 'maybe' ? 'maybe' : null;
+            }}
+            onPress={(w) =>
+              set((cur) => ({ availability: { ...cur.availability, [w]: NEXT_AVAILABILITY[cur.availability[w] ?? 'no'] } }))
+            }
+          />
+          {none ? <Caption>Aucun week-end touché : tu seras compté comme pas dispo.</Caption> : null}
+        </View>
+      );
+    },
   },
   {
     key: 'city',
@@ -334,23 +331,37 @@ const STEPS: StepDef[] = [
     key: 'cadres',
     emoji: '🌊',
     title: 'Plutôt quel décor ?',
-    hint: 'Plusieurs choix possibles. Rien de coché = peu importe.',
+    hint: 'Coche au moins 2 décors, ou « Peu importe ».',
     criterion: 'cadres',
-    valid: () => true,
+    valid: (d) => d.cadres.length !== 1,
     render: (d, set) => (
-      <View style={styles.grid}>
-        {CADRES.map((c) => (
+      <View style={{ gap: space(3) }}>
+        <TileGrid>
+          {CADRES.map((c) => (
+            <Tile
+              key={c}
+              compact
+              kind="check"
+              label={CADRE_LABELS[c].label}
+              emoji={CADRE_LABELS[c].emoji}
+              selected={d.cadres.includes(c)}
+              onPress={() => set((cur) => ({ cadres: toggle(cur.cadres, c) }))}
+              color={colors.mint}
+            />
+          ))}
           <Tile
-            key={c}
             compact
-            kind="check"
-            label={CADRE_LABELS[c].label}
-            emoji={CADRE_LABELS[c].emoji}
-            selected={d.cadres.includes(c)}
-            onPress={() => set((cur) => ({ cadres: toggle(cur.cadres, c) }))}
+            label="Peu importe"
+            emoji="🤷"
+            selected={d.cadres.length === 0}
+            onPress={() => set({ cadres: [] })}
             color={colors.mint}
+            testID="cadres-any"
           />
-        ))}
+        </TileGrid>
+        {d.cadres.length === 1 ? (
+          <Caption color={colors.sunsetDark}>Ajoute un 2e décor pour continuer, ou choisis « Peu importe ».</Caption>
+        ) : null}
       </View>
     ),
   },
@@ -362,7 +373,7 @@ const STEPS: StepDef[] = [
     criterion: 'envies',
     valid: () => true,
     render: (d, set) => (
-      <View style={styles.grid}>
+      <TileGrid>
         {ENVIES.map((e) => (
           <Tile
             key={e}
@@ -381,7 +392,7 @@ const STEPS: StepDef[] = [
             color={colors.flamingo}
           />
         ))}
-      </View>
+      </TileGrid>
     ),
   },
   {
@@ -392,7 +403,7 @@ const STEPS: StepDef[] = [
     criterion: 'transports',
     valid: (d) => d.transports.length > 0,
     render: (d, set) => (
-      <View style={styles.grid}>
+      <TileGrid>
         {TRANSPORT_MODES.filter((m) => m !== 'bike' || d.envies.includes('sport')).map((m) => (
           <Tile
             key={m}
@@ -405,7 +416,7 @@ const STEPS: StepDef[] = [
             color={colors.sky}
           />
         ))}
-      </View>
+      </TileGrid>
     ),
   },
   {
@@ -548,7 +559,9 @@ export default function Questions() {
     }
     setBusy(true);
     try {
-      await backend.saveAnswers(data.vadrouille.id, draft as Answers);
+      // un week-end jamais touché dans le calendrier = pas dispo
+      const availability = Object.fromEntries(weekends.map((w) => [w, draft.availability[w] ?? 'no']));
+      await backend.saveAnswers(data.vadrouille.id, { ...draft, availability } as Answers);
       haptic.success();
       await refresh();
       router.replace(`/v/${code}?merci=1` as never);
@@ -607,24 +620,12 @@ export default function Questions() {
 const styles = StyleSheet.create({
   stepEmoji: { fontSize: 40 },
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: space(3) },
+  gridSpacer: { flexGrow: 1, flexBasis: '45%' },
   cityTile: { minHeight: 72 },
   bigValue: { alignItems: 'center', paddingVertical: space(5), gap: space(1) },
   bigValueText: { fontSize: 64, lineHeight: 68 },
   ambianceEmoji: { fontSize: 64 },
   scale: { flexDirection: 'row', justifyContent: 'space-between' },
-  availabilityRow: { flexDirection: 'row', gap: space(2) },
-  availability: {
-    flex: 1,
-    alignItems: 'center',
-    paddingVertical: space(3),
-    borderRadius: radius.md,
-    borderWidth: BORDER,
-    borderColor: colors.ink,
-    backgroundColor: colors.paper,
-    gap: 2,
-  },
-  availabilityEmoji: { fontSize: 20 },
-  availabilityLabel: { fontFamily: fonts.bodyBold, fontSize: 13, color: colors.ink },
   importance: { gap: space(2), marginTop: space(2), paddingTop: space(4), borderTopWidth: 2, borderTopColor: colors.line },
   importanceRow: { flexDirection: 'row', gap: space(2) },
   importanceChip: {
