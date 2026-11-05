@@ -80,7 +80,7 @@ export function Slider({
           styles.thumb,
           styles.noTouch,
           hardShadow(3),
-          { left: ratio * width - THUMB / 2 },
+          { left: `${ratio * 100}%`, marginLeft: -THUMB / 2 },
         ]}
       />
     </View>

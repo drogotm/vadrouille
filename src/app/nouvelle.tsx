@@ -12,7 +12,7 @@ import { TopBar } from '@/components/TopBar';
 import { WeekendCalendar } from '@/components/WeekendCalendar';
 import { Body, Caption, Display, Title } from '@/components/Typography';
 import { backend } from '@/lib/backend';
-import { upcomingWeekends } from '@/lib/dates';
+import { weekendsInNextMonths } from '@/lib/dates';
 import { errorMessage } from '@/lib/errors';
 import { haptic } from '@/lib/haptics';
 import { useSession } from '@/lib/session';
@@ -32,7 +32,7 @@ export default function Nouvelle() {
   const [size, setSize] = useState(6);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [candidates] = useState(() => upcomingWeekends(12));
+  const [candidates] = useState(() => weekendsInNextMonths(6));
 
   // la liste d'étapes raccourcit quand le prénom est enregistré : on borne l'index
   const step = steps[Math.min(index, steps.length - 1)];
@@ -105,7 +105,7 @@ export default function Nouvelle() {
 
       {step === 'me' ? (
         <>
-          <Title>D’abord, c’est quoi ton prénom ?</Title>
+          <Title>D’abord, c’est quoi ton prénom ?</Title>
           <Body color={colors.inkSoft}>C’est ce que ta bande verra. Pas de mot de passe, pas d’email.</Body>
           <Field
             big
@@ -124,7 +124,7 @@ export default function Nouvelle() {
 
       {step === 'name' ? (
         <>
-          <Title>Elle s’appelle comment, cette Vadrouille ?</Title>
+          <Title>Elle s’appelle comment, cette Vadrouille ?</Title>
           <Body color={colors.inkSoft}>Un nom qui parle à la bande.</Body>
           <Field
             big
@@ -142,7 +142,7 @@ export default function Nouvelle() {
 
       {step === 'weekends' ? (
         <>
-          <Title>Quels week-ends te vont ?</Title>
+          <Title>Quels week-ends te vont ?</Title>
           <Body color={colors.inkSoft}>
             Choisis-en 2 à 4 : ce sont tes dispos. On retiendra celui où le groupe est le plus nombreux.
           </Body>
@@ -151,6 +151,7 @@ export default function Nouvelle() {
             mark={(w) => (weekends.includes(w) ? 'selected' : null)}
             onPress={toggleWeekend}
             disabled={() => weekends.length >= 4}
+            paged
           />
           <Caption>{weekends.length}/4 sélectionnés · du vendredi soir au dimanche</Caption>
         </>
@@ -158,7 +159,7 @@ export default function Nouvelle() {
 
       {step === 'size' ? (
         <>
-          <Title>Vous serez combien, à peu près ?</Title>
+          <Title>Combien de vadrouilleurs seront de la partie ?</Title>
           <Body color={colors.inkSoft}>Toi compris. C’est juste pour suivre qui a répondu.</Body>
           <View style={styles.sizeBox}>
             <Display style={styles.sizeValue}>{size}</Display>

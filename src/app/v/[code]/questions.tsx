@@ -179,35 +179,55 @@ function CityStep({ d, set }: { d: Draft; set: SetDraft }) {
   );
 }
 
-const IMPORTANCE: { value: Importance; label: string; emoji: string }[] = [
-  { value: 'negociable', label: 'Négociable', emoji: '🤷' },
-  { value: 'souhaitable', label: 'Souhaitable', emoji: '👍' },
-  { value: 'indispensable', label: 'Indispensable', emoji: '🔒' },
-];
+/**
+ * Flexibilité, posée en mots simples pour chaque critère. Sous le capot, on garde les trois
+ * niveaux du moteur : « très flexible » = négociable, « un peu » = souhaitable (par défaut),
+ * « pas du tout » = indispensable (filtre dur).
+ */
+const FLEX_ORDER: Importance[] = ['negociable', 'souhaitable', 'indispensable'];
 
-/** Réglage discret : par défaut « souhaitable », on n'y touche que si on y tient. */
-function ImportancePicker({ value, onChange }: { value: Importance; onChange: (v: Importance) => void }) {
+const FLEX_COPY: Partial<Record<CriterionKey, { question: string; labels: [string, string, string] }>> = {
+  budget: { question: 'Ton budget est-il flexible ?', labels: ['Oui, assez', 'Un peu', 'Non, c’est mon max'] },
+  travelTime: { question: 'Et ce temps de trajet, flexible ?', labels: ['Oui, assez', 'Un peu', 'Non, pas plus'] },
+  transports: { question: 'Prêt·e à prendre un autre transport ?', labels: ['Oui, sans souci', 'Si besoin', 'Non, que ceux-là'] },
+  cadres: { question: 'Prêt·e à changer de décor ?', labels: ['Oui, sans souci', 'Pourquoi pas', 'Non, j’y tiens'] },
+  envies: { question: 'Et si le programme était un peu différent ?', labels: ['Ça me va', 'Pourquoi pas', 'Non, j’y tiens'] },
+  comfort: { question: 'Prêt·e à faire une concession sur le confort ?', labels: ['Oui, sans souci', 'Un peu', 'Non, j’y tiens'] },
+  ambiance: { question: 'Et si l’ambiance était différente ?', labels: ['Ça me va', 'Pourquoi pas', 'Non, j’y tiens'] },
+};
+
+/** Réglage discret : par défaut « un peu » (souhaitable), on n'y touche que si on y tient. */
+function FlexibilityPicker({
+  criterion,
+  value,
+  onChange,
+}: {
+  criterion: CriterionKey;
+  value: Importance;
+  onChange: (v: Importance) => void;
+}) {
+  const copy = FLEX_COPY[criterion];
+  if (!copy) return null;
   return (
     <View style={styles.importance}>
-      <Caption>À quel point ça compte pour toi ?</Caption>
+      <Caption>{copy.question}</Caption>
       <View style={styles.importanceRow}>
-        {IMPORTANCE.map((opt) => {
-          const on = opt.value === value;
+        {FLEX_ORDER.map((level, i) => {
+          const on = level === value;
+          const strict = level === 'indispensable';
           return (
             <Pressable
-              key={opt.value}
+              key={level}
               accessibilityRole="radio"
               accessibilityState={{ selected: on }}
-              accessibilityLabel={opt.label}
+              accessibilityLabel={`${copy.question} ${copy.labels[i]}`}
               onPress={() => {
                 haptic.select();
-                onChange(opt.value);
+                onChange(level);
               }}
-              style={[styles.importanceChip, on && (opt.value === 'indispensable' ? styles.importanceMust : styles.importanceOn)]}
+              style={[styles.importanceChip, on && (strict ? styles.importanceMust : styles.importanceOn)]}
             >
-              <Text style={[styles.importanceLabel, on && opt.value === 'indispensable' && { color: colors.paper }]}>
-                {opt.emoji} {opt.label}
-              </Text>
+              <Text style={[styles.importanceLabel, on && strict && { color: colors.paper }]}>{copy.labels[i]}</Text>
             </Pressable>
           );
         })}
@@ -233,7 +253,7 @@ const STEPS: StepDef[] = [
   {
     key: 'availability',
     emoji: '📅',
-    title: 'T’es dispo quand ?',
+    title: 'T’es dispo quand ?',
     hint: 'Touche les week-ends où tu peux venir.',
     valid: () => true,
     render: (d, set, { weekends, nights }) => {
@@ -260,7 +280,7 @@ const STEPS: StepDef[] = [
   {
     key: 'city',
     emoji: '📍',
-    title: 'Tu pars d’où ?',
+    title: 'De quelle ville pars-tu ?',
     hint: 'Ton trajet et ton budget sont calculés depuis ta ville.',
     valid: (d) => d.departureCity !== undefined,
     render: (d, set) => <CityStep d={d} set={set} />,
@@ -268,7 +288,7 @@ const STEPS: StepDef[] = [
   {
     key: 'budget',
     emoji: '💰',
-    title: 'Ton budget max, tout compris ?',
+    title: 'Ton budget max, tout compris ?',
     hint: 'Transport + logement + bouffe + activités. Personne ne le verra.',
     criterion: 'budget',
     valid: () => true,
@@ -298,7 +318,7 @@ const STEPS: StepDef[] = [
   {
     key: 'travel',
     emoji: '⏱️',
-    title: 'Combien de temps de trajet, max ?',
+    title: 'Combien de temps de trajet, max ?',
     hint: 'Pour l’aller, porte à porte.',
     criterion: 'travelTime',
     valid: () => true,
@@ -330,7 +350,7 @@ const STEPS: StepDef[] = [
   {
     key: 'cadres',
     emoji: '🌊',
-    title: 'Plutôt quel décor ?',
+    title: 'Plutôt quel décor ?',
     hint: 'Coche au moins 2 décors, ou « Peu importe ».',
     criterion: 'cadres',
     valid: (d) => d.cadres.length !== 1,
@@ -368,7 +388,7 @@ const STEPS: StepDef[] = [
   {
     key: 'envies',
     emoji: '🎯',
-    title: 'T’as envie de quoi ?',
+    title: 'T’as envie de quoi ?',
     hint: 'Plusieurs choix possibles. Rien de coché = peu importe.',
     criterion: 'envies',
     valid: () => true,
@@ -398,7 +418,7 @@ const STEPS: StepDef[] = [
   {
     key: 'transports',
     emoji: '🚆',
-    title: 'Tu voyages comment ?',
+    title: 'Tu voyages comment ?',
     hint: 'Coche tout ce qui te va. Le vélo apparaît si tu as coché Sport.',
     criterion: 'transports',
     valid: (d) => d.transports.length > 0,
@@ -422,7 +442,7 @@ const STEPS: StepDef[] = [
   {
     key: 'comfort',
     emoji: '🛏️',
-    title: 'Niveau confort ?',
+    title: 'Niveau confort ?',
     hint: 'Pour le logement.',
     criterion: 'comfort',
     valid: () => true,
@@ -445,7 +465,7 @@ const STEPS: StepDef[] = [
   {
     key: 'weather',
     emoji: '☀️',
-    title: 'Le beau temps, ça compte ?',
+    title: 'Le beau temps, ça compte ?',
     hint: 'On regarde l’ensoleillement habituel à ces dates.',
     valid: () => true,
     render: (d, set) => (
@@ -470,7 +490,7 @@ const STEPS: StepDef[] = [
   {
     key: 'ambiance',
     emoji: '🌙',
-    title: 'Quelle ambiance ?',
+    title: 'Quelle ambiance ?',
     hint: 'De la sieste au marathon de bars.',
     criterion: 'ambiance',
     valid: () => true,
@@ -609,7 +629,9 @@ export default function Questions() {
         <Body color={colors.inkSoft}>{step.hint}</Body>
       </View>
       {step.render(draft, set, { weekends, nights })}
-      {step.criterion ? <ImportancePicker value={importance} onChange={setImportance} /> : null}
+      {step.criterion ? (
+        <FlexibilityPicker criterion={step.criterion} value={importance} onChange={setImportance} />
+      ) : null}
     </Screen>
   );
 }
@@ -628,6 +650,8 @@ const styles = StyleSheet.create({
   importanceChip: {
     flex: 1,
     alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: space(1),
     paddingVertical: space(2),
     borderRadius: radius.pill,
     borderWidth: 2,
@@ -636,5 +660,5 @@ const styles = StyleSheet.create({
   },
   importanceOn: { borderColor: colors.ink, backgroundColor: colors.paper },
   importanceMust: { borderColor: colors.ink, backgroundColor: colors.ink },
-  importanceLabel: { fontFamily: fonts.bodyBold, fontSize: 12, color: colors.ink },
+  importanceLabel: { fontFamily: fonts.bodyBold, fontSize: 12, lineHeight: 15, color: colors.ink, textAlign: 'center' },
 });

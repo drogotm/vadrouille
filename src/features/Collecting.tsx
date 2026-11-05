@@ -196,7 +196,7 @@ export function Collecting({ state, refresh }: { state: VadrouilleState; refresh
       {canCompute ? (
         <View style={{ gap: space(2) }}>
           <Button
-            title={everyone ? 'Voir nos 3 options' : blocked ? 'Relancer le calcul' : 'Forcer le calcul maintenant'}
+            title={everyone ? 'Voir nos 3 options' : blocked ? 'Régénérer nos options' : 'Générer nos options de week-end'}
             emoji="✨"
             loading={busy === 'compute'}
             onPress={() =>
@@ -210,14 +210,14 @@ export function Collecting({ state, refresh }: { state: VadrouilleState; refresh
           {!everyone ? (
             <Caption center>
               {answered.length} réponse{answered.length > 1 ? 's' : ''} sur {expected}. Tu peux attendre les autres ou
-              lancer avec ceux qui ont répondu.
+              générer les options avec ceux qui ont déjà répondu.
             </Caption>
           ) : null}
         </View>
       ) : (
         <Caption center>
           {answered.length === 0
-            ? 'Le calcul se lance dès qu’il y a des réponses.'
+            ? 'Les options de week-end se génèrent dès qu’il y a des réponses.'
             : 'Les 3 options arrivent dès que tout le monde a répondu (ou quand l’orga le décide).'}
         </Caption>
       )}

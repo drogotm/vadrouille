@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Caption } from '@/components/Typography';
@@ -30,13 +31,15 @@ interface Props {
   nights?: number;
   /** un week-end qu'on ne peut plus choisir (ex. limite atteinte) reste visible mais inerte */
   disabled?: (friday: string) => boolean;
+  /** un mois à la fois, avec des flèches (pour les longues fenêtres, ex. 6 mois) */
+  paged?: boolean;
 }
 
 /**
  * Calendrier mois par mois : seuls les week-ends proposés se touchent, d'un seul geste
  * (vendredi → dimanche). Les autres jours restent visibles mais grisés, pour se repérer.
  */
-export function WeekendCalendar({ weekends, mark, onPress, nights = 2, disabled }: Props) {
+export function WeekendCalendar({ weekends, mark, onPress, nights = 2, disabled, paged = false }: Props) {
   const fridays = new Set(weekends);
   const months: { year: number; month: number }[] = [];
   for (const w of [...weekends].sort()) {
@@ -44,11 +47,58 @@ export function WeekendCalendar({ weekends, mark, onPress, nights = 2, disabled 
     if (!months.some((x) => x.year === m.year && x.month === m.month)) months.push(m);
   }
 
+  const [page, setPage] = useState(0);
+  const current = Math.min(page, Math.max(0, months.length - 1));
+  const shown = paged ? months.slice(current, current + 1) : months;
+  // en mode paginé, on signale les week-ends déjà choisis dans chaque mois
+  const picked = (m: { year: number; month: number }) =>
+    weekends.filter((w) => {
+      const wm = monthOf(w);
+      return wm.year === m.year && wm.month === m.month && mark(w) !== null;
+    }).length;
+
   return (
     <View style={styles.months}>
-      {months.map(({ year, month }) => (
+      {paged && months.length > 1 ? (
+        <View style={styles.tabs}>
+          {months.map((m, i) => {
+            const on = i === current;
+            const n = picked(m);
+            return (
+              <Pressable
+                key={`${m.year}-${m.month}`}
+                accessibilityRole="tab"
+                accessibilityState={{ selected: on }}
+                accessibilityLabel={`${monthTitle(m.year, m.month)}${n ? `, ${n} choisi${n > 1 ? 's' : ''}` : ''}`}
+                onPress={() => {
+                  haptic.select();
+                  setPage(i);
+                }}
+                style={[styles.tab, on && styles.tabOn]}
+              >
+                <Text style={styles.tabLabel}>{monthShort(m.month)}</Text>
+                {n > 0 ? <View style={styles.tabDot} /> : null}
+              </Pressable>
+            );
+          })}
+        </View>
+      ) : null}
+      {shown.map(({ year, month }) => (
         <View key={`${year}-${month}`} style={styles.month}>
-          <Text style={styles.monthTitle}>{monthTitle(year, month)}</Text>
+          {paged ? (
+            <View style={styles.pager}>
+              <PagerArrow label="Mois précédent" glyph="‹" hidden={current === 0} onPress={() => setPage(current - 1)} />
+              <Text style={[styles.monthTitle, styles.monthTitlePaged]}>{monthTitle(year, month)}</Text>
+              <PagerArrow
+                label="Mois suivant"
+                glyph="›"
+                hidden={current >= months.length - 1}
+                onPress={() => setPage(current + 1)}
+              />
+            </View>
+          ) : (
+            <Text style={styles.monthTitle}>{monthTitle(year, month)}</Text>
+          )}
           <View style={styles.row}>
             {DAYS.map((d, i) => (
               <Text key={i} style={[styles.dayName, i >= 4 && styles.dayNameWeekend]}>
@@ -104,6 +154,27 @@ export function WeekendCalendar({ weekends, mark, onPress, nights = 2, disabled 
   );
 }
 
+const MONTH_SHORT = ['Janv', 'Févr', 'Mars', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sept', 'Oct', 'Nov', 'Déc'];
+const monthShort = (month: number) => MONTH_SHORT[month];
+
+function PagerArrow({ label, glyph, hidden, onPress }: { label: string; glyph: string; hidden: boolean; onPress: () => void }) {
+  if (hidden) return <View style={styles.arrow} />;
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      hitSlop={8}
+      onPress={() => {
+        haptic.select();
+        onPress();
+      }}
+      style={({ pressed }) => [styles.arrow, styles.arrowOn, !pressed && hardShadow(2)]}
+    >
+      <Text style={styles.arrowGlyph}>{glyph}</Text>
+    </Pressable>
+  );
+}
+
 function Day({ iso, month }: { iso: string; month: number }) {
   const outside = monthOf(iso).month !== month;
   return (
@@ -146,6 +217,30 @@ const styles = StyleSheet.create({
     textTransform: 'capitalize',
     marginBottom: space(1),
   },
+  monthTitlePaged: { flex: 1, textAlign: 'center', marginBottom: 0 },
+  pager: { flexDirection: 'row', alignItems: 'center', gap: space(2), marginBottom: space(2) },
+  arrow: { width: 40, height: 40 },
+  arrowOn: {
+    borderRadius: 20,
+    borderWidth: BORDER,
+    borderColor: colors.ink,
+    backgroundColor: colors.paper,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  arrowGlyph: { fontFamily: fonts.bodyBold, fontSize: 24, lineHeight: 26, color: colors.ink, marginTop: -2 },
+  tabs: { flexDirection: 'row', gap: space(1) },
+  tab: {
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: space(2),
+    borderRadius: radius.pill,
+    borderWidth: 2,
+    borderColor: colors.line,
+  },
+  tabOn: { borderColor: colors.ink, backgroundColor: colors.sun },
+  tabLabel: { fontFamily: fonts.bodyBold, fontSize: 12, color: colors.ink },
+  tabDot: { width: 6, height: 6, borderRadius: 3, backgroundColor: colors.sunset, marginTop: 2 },
   row: { flexDirection: 'row', alignItems: 'center', minHeight: CELL, gap: 0 },
   dayName: {
     flex: 1,

@@ -36,6 +36,22 @@ export function upcomingWeekends(count = 12, from = new Date()): string[] {
   return out;
 }
 
+/**
+ * Tous les vendredis à partir de demain jusqu'à la fin du `months`-ième mois (mois en cours
+ * compris) : avec 6, une fenêtre de novembre à fin avril si l'on est en novembre.
+ */
+export function weekendsInNextMonths(months = 6, from = new Date()): string[] {
+  const end = new Date(from.getFullYear(), from.getMonth() + months, 0, 12); // dernier jour du 6e mois
+  const d = new Date(from.getFullYear(), from.getMonth(), from.getDate() + 1, 12);
+  while (d.getDay() !== 5) d.setDate(d.getDate() + 1);
+  const out: string[] = [];
+  while (d <= end) {
+    out.push(toIso(d));
+    d.setDate(d.getDate() + 7);
+  }
+  return out;
+}
+
 /** « 13 – 15 nov. » (ou « 30 oct. – 1 nov. ») */
 export function weekendRange(fridayIso: string, nights = 2): string {
   const start = parse(fridayIso);
