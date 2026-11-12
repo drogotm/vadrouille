@@ -14,6 +14,7 @@ import {
 } from '@/engine';
 import type { OptionInfo, VadrouilleState } from '@/lib/backend';
 import { activityUrl, lodgingUrl, placeName, stayDates, transportUrl, type StayDates } from '@/lib/booking';
+import { priceRange } from '@/lib/prices';
 import { colors, space } from '@/theme/tokens';
 
 function Line({ label, value, bold }: { label: string; value: string; bold?: boolean }) {
@@ -52,7 +53,7 @@ function Suggestions({
         <View key={s.name} style={styles.suggestion}>
           <View style={styles.line}>
             <Strong style={{ flex: 1 }}>{s.name}</Strong>
-            {s.price ? <Caption>{s.price}</Caption> : null}
+            {s.price ? <Caption>{priceRange(s.price, booking ? 'activity' : 'restaurant')}</Caption> : null}
           </View>
           <Caption>{s.description}</Caption>
           {booking ? (
@@ -60,7 +61,7 @@ function Suggestions({
           ) : null}
         </View>
       ))}
-      <Caption>Suggestions indicatives, à vérifier avant d’y aller.</Caption>
+      <Caption>Prix estimés par personne. Suggestions indicatives, à vérifier avant d’y aller.</Caption>
     </Card>
   );
 }
