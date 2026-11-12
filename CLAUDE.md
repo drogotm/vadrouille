@@ -20,6 +20,7 @@ npm run check:secrets    # vérifie qu'aucune clé n'est versionnée
 npm run verify           # typecheck + tests + secrets (lancé automatiquement avant chaque push)
 npm run check:functions  # type-check Deno des Edge Functions (télécharge Deno via npx)
 npm run build:web        # export web statique dans dist/
+npm run smoke:supabase   # essai RÉEL : parcours à 5 comptes sur le projet Supabase de .env
 ```
 
 ## Règles du dépôt
@@ -224,3 +225,21 @@ _(liste tenue à jour au fil du développement — chaque entrée : décision + 
     en local). `npm run build:web` lance maintenant `scripts/prepare-web-deploy.ts`, qui renomme
     ce dossier en `assets/pkg/`, corrige les chemins et écrit `dist/vercel.json`. Toujours
     vérifier le rendu sur l'URL déployée, pas seulement en local.
+26. **Backend réel branché** (12 nov. 2026, Salim) : projet Supabase `vadrouille`
+    (ref `kmjsxigtyqbuqjskozmx`, région eu-west-1, plan gratuit, compte de Salim). Remplace la
+    décision 1. Migrations poussées, `compute-results` déployée, connexion anonyme activée.
+    Validé par `npm run smoke:supabase` (`scripts/smoke-supabase.ts`) : 5 comptes anonymes,
+    invitation, réponses, confidentialité, calcul, budget individuel, vote, clôture.
+    - **Bug corrigé au déploiement** : les imports nus de la fonction n'étaient pas résolus
+      (`deno.json` partagé ignoré au bundling) ; `config.toml` déclare maintenant
+      `[functions.compute-results] import_map`.
+    - **Modèles d'email non appliqués** : le plan gratuit interdit de les modifier sans SMTP
+      personnalisé. La sauvegarde du compte par email (« Mon compte », code à 6 chiffres) envoie
+      donc l'email par défaut de Supabase, sans le code : elle ne marche pas tant qu'un SMTP
+      (Brevo, Resend…) n'est pas configuré. Le reste du parcours n'utilise pas d'email.
+    - `ANTHROPIC_API_KEY` non fournie : les accroches viennent du seed.
+    - Chaque poste a son `.env` (URL + clé publique du projet, voir `.env.example`) ; le mot de
+      passe de la base n'est utile qu'à qui pousse des migrations.
+27. **Fourchettes de prix** (12 nov. 2026, Salim) : les suggestions d'activités et de restos
+    affichent une fourchette estimée par personne à la place de €/€€/€€€ (`src/lib/prices.ts`).
+    Ordres de grandeur génériques par niveau, pas le tarif réel du lieu.

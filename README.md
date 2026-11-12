@@ -90,6 +90,9 @@ Typecheck + 68 tests + scan de secrets (lancé aussi avant chaque `git push`) :
 
 `npm run check:functions` type-check l'Edge Function avec Deno.
 
+`npm run smoke:supabase` joue le parcours complet (5 comptes anonymes) sur le projet Supabase
+désigné par `.env`, puis supprime la Vadrouille de test.
+
 ## Où modifier quoi
 
 | Je veux… | Fichier |
@@ -118,7 +121,8 @@ Détaillées et justifiées dans [CLAUDE.md](CLAUDE.md). Les principales :
 Bloqué tant qu'un humain ne l'a pas fait :
 
 - [ ] Installer Xcode et tester sur le simulateur iOS (jamais fait à ce jour — seule la version web a été vérifiée).
-- [ ] Créer / choisir le projet Supabase, pousser les migrations, déployer la fonction, activer la connexion anonyme. **Le backend réel n'a jamais tourné contre l'app** : il est couvert par les tests PGlite et le type-check Deno, pas par un essai réel.
+- [x] Projet Supabase `vadrouille` créé, migrations poussées, fonction déployée, connexion anonyme activée (12 nov. 2026). Vérifié par `npm run smoke:supabase` : parcours complet à 5 comptes sur le vrai projet.
+- [ ] Configurer un SMTP (Brevo, Resend…) : sans lui, le plan gratuit n'envoie pas le code à 6 chiffres, donc la sauvegarde du compte par email ne marche pas.
 - [ ] Fournir la clé `ANTHROPIC_API_KEY` (l'appel Claude est type-checké, jamais exécuté).
 - [ ] Héberger la version web et renseigner `EXPO_PUBLIC_WEB_URL`.
 
