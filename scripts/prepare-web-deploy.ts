@@ -9,14 +9,23 @@
  *
  * Lancé par `npm run build:web` ; `node scripts/prepare-web-deploy.ts` pour le relancer seul.
  */
-import { existsSync, readdirSync, readFileSync, renameSync, statSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, readdirSync, readFileSync, renameSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const dist = join(process.cwd(), 'dist');
 const from = join(dist, 'assets', 'node_modules');
 const to = join(dist, 'assets', 'pkg');
 
-if (existsSync(from)) renameSync(from, to);
+if (existsSync(from)) {
+  try {
+    renameSync(from, to);
+  } catch {
+    // Windows : le renommage d'un dossier échoue (EPERM) si un fichier y est ouvert par un
+    // autre programme (serveur Expo, antivirus). On copie puis on supprime, ce qui passe.
+    cpSync(from, to, { recursive: true });
+    rmSync(from, { recursive: true, force: true, maxRetries: 5, retryDelay: 500 });
+  }
+}
 
 let patched = 0;
 const walk = (dir: string) => {

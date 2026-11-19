@@ -124,7 +124,7 @@ Bloqué tant qu'un humain ne l'a pas fait :
 - [x] Projet Supabase `vadrouille` créé, migrations poussées, fonction déployée, connexion anonyme activée (12 nov. 2026). Vérifié par `npm run smoke:supabase` : parcours complet à 5 comptes sur le vrai projet.
 - [ ] Configurer un SMTP (Brevo, Resend…) : sans lui, le plan gratuit n'envoie pas le code à 6 chiffres, donc la sauvegarde du compte par email ne marche pas.
 - [ ] Fournir la clé `ANTHROPIC_API_KEY` (l'appel Claude est type-checké, jamais exécuté).
-- [ ] Héberger la version web et renseigner `EXPO_PUBLIC_WEB_URL`.
+- [x] Version web hébergée : https://vadrouille-alpha.vercel.app (19 nov. 2026).
 
 Ensuite :
 

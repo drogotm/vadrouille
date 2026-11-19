@@ -243,3 +243,11 @@ _(liste tenue à jour au fil du développement — chaque entrée : décision + 
 27. **Fourchettes de prix** (12 nov. 2026, Salim) : les suggestions d'activités et de restos
     affichent une fourchette estimée par personne à la place de €/€€/€€€ (`src/lib/prices.ts`).
     Ordres de grandeur génériques par niveau, pas le tarif réel du lieu.
+28. **Version web en ligne** (19 nov. 2026, Salim) : https://vadrouille-alpha.vercel.app (Vercel,
+    compte gratuit de Salim, projet `vadrouille`), branchée sur le projet Supabase réel.
+    Déploiement : `npm run build:web`, puis `npx vercel deploy --prod` depuis `dist/`. Sur le web,
+    le lien d'invitation prend le domaine courant : `EXPO_PUBLIC_WEB_URL` n'est utile que pour
+    l'app native. Parcours vérifié dans l'interface sur le vrai backend (création, questionnaire,
+    4 invités, calcul, vote) et page d'invitation vérifiée sur l'URL en ligne.
+    - `prepare-web-deploy.ts` : sous Windows, le renommage du dossier des polices échouait
+      (EPERM) ; repli sur copie puis suppression.
